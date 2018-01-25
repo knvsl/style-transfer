@@ -39,21 +39,26 @@ def save_image(path, image):
     image = np.clip(image, 0, 255).astype('uint8')
     scipy.misc.imsave(path, image)
 
+# TODO: make this more clear
+def gram(input, n, m):
+    # Reshape to 2D matrix
+    matrix = tf.reshape(input, (n, m))
+    return tf.matmul(tf.transpose(matrix), matrix)
+
 # TODO: Clean up the loss functions
 # Using squared error of orginal (F) and generated (P) as defined in paper
 def content_loss(sess, model):
 
     P = sess.run(model['conv4_2'])
     F = model['conv4_2']
-
     return (1 / 2) * tf.reduce_sum(tf.pow(F - P, 2))
 
 def style_loss(sess, model):
 
     loss = 0
-    style_layers = [('conv1_1',0), ('conv2_1',5), ('conv3_1',10), ('conv4_1',19), ('conv5_1',28)]
+    style_layers = ['conv1_1', 'conv2_1', 'conv3_1', 'conv4_1', 'conv5_1']
 
-    for layer, index in style_layers:
+    for layer in style_layers:
         P = sess.run(model[layer])
         F = model[layer]
 
@@ -84,12 +89,6 @@ def bias(layer):
     vgg_layers = VGG['layers']
     b = vgg_layers[0][layer][0][0][2][0][1]
     return tf.constant(b.reshape(-1))
-
-# TODO: make this more clear
-def gram(input, N, M):
-    # Reshape to 2D matrix
-    matrix = tf.reshape(input, (M, N))
-    return tf.matmul(tf.transpose(matrix), matrix)
 
 def conv(input, layer):
     W = weight(layer)
