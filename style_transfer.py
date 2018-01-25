@@ -8,6 +8,10 @@ VGG = scipy.io.loadmat('imagenet-vgg-verydeep-19.mat')
 ITERATIONS = 100
 ALPHA = 5
 BETA = 100
+
+CONTENT_LAYERS = ['conv4_2']
+STYLE_LAYERS = ['conv1_1', 'conv2_1', 'conv3_1', 'conv4_1', 'conv5_1']
+
 STYLE = 'img/style/vangogh.jpg'
 CONTENT = 'img/content/sunflower.jpg'
 WIDTH = 800
@@ -49,16 +53,20 @@ def gram(input, n, m):
 # Using squared error of orginal (F) and generated (P) as defined in paper
 def content_loss(sess, model):
 
-    P = sess.run(model['conv4_2'])
-    F = model['conv4_2']
-    return (1 / 2) * tf.reduce_sum(tf.pow(F - P, 2))
+    loss = 0
+
+    for layer in CONTENT_LAYERS:
+        P = sess.run(model[layer])
+        F = model[layer]
+        loss += (1 / 2) * tf.reduce_sum(tf.pow(F - P, 2))
+
+    return loss
 
 def style_loss(sess, model):
 
     loss = 0
-    style_layers = ['conv1_1', 'conv2_1', 'conv3_1', 'conv4_1', 'conv5_1']
 
-    for layer in style_layers:
+    for layer in STYLE_LAYERS:
         P = sess.run(model[layer])
         F = model[layer]
 
@@ -75,6 +83,7 @@ def style_loss(sess, model):
         # TODO: change weights of layers?
         W = 1.0
 
+        # E is the loss for a particular layer
         E = (1 / (4 * N**2 * M**2)) * tf.reduce_sum(tf.pow(G - A, 2)) * W
         loss += E
 
