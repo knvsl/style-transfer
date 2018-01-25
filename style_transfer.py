@@ -5,6 +5,7 @@ import scipy.misc
 import tensorflow as tf
 
 VGG = scipy.io.loadmat('imagenet-vgg-verydeep-19.mat')
+LEARNING_RATE = 3.0
 ITERATIONS = 100
 ALPHA = 5
 BETA = 100
@@ -111,6 +112,7 @@ def relu(input):
 def avgpool(input):
         return tf.nn.avg_pool(input, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
 
+# TODO: make loop version of this
 def create_graph():
 
     # Explicit step-by-step graph construction
@@ -200,9 +202,8 @@ if __name__ == '__main__':
         # Total loss
         L_total = BETA * L_content + ALPHA * L_style
 
-        # TODO: make learning rate constant - affects how much image is changed each iteration
         # Minimize loss
-        optimizer = tf.train.AdamOptimizer(2.0)
+        optimizer = tf.train.AdamOptimizer(LEARNING_RATE)
         train_step = optimizer.minimize(L_total)
 
         sess.run(tf.global_variables_initializer())
