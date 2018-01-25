@@ -5,8 +5,8 @@ import scipy.misc
 import tensorflow as tf
 
 VGG = scipy.io.loadmat('imagenet-vgg-verydeep-19.mat')
-LEARNING_RATE = 3.0
-ITERATIONS = 100
+ITERATIONS = 1000
+LEARNING_RATE = 2.0
 ALPHA = 5
 BETA = 100
 
@@ -43,13 +43,11 @@ def save_image(path, image):
     image = np.clip(image, 0, 255).astype('uint8')
     scipy.misc.imsave(path, image)
 
-# TODO: make this more clear
 def gram(input, n, m):
     # Reshape to 2D matrix
-    matrix = tf.reshape(input, (n, m))
+    matrix = tf.reshape(input, (m, n))
     return tf.matmul(tf.transpose(matrix), matrix)
 
-# TODO: Clean up the loss functions
 # Using squared error of orginal (F) and generated (P) as defined in paper
 def content_loss(sess, model):
 
@@ -65,26 +63,28 @@ def content_loss(sess, model):
 def style_loss(sess, model):
 
     loss = 0
+    #style_layers = ['conv1_1', 'conv2_1', 'conv3_1', 'conv4_1', 'conv5_1']
+    style_weights = [0.5, 1.0, 1.5, 3.0, 4.0]
 
     for layer in STYLE_LAYERS:
-        P = sess.run(model[layer])
-        F = model[layer]
+        for w in style_weights:
+            P = sess.run(model[layer])
+            F = model[layer]
 
-        # Number of filters
-        N = P.shape[3]
-        # Height x Width of feature map
-        M = P.shape[1] * P.shape[2]
+            # Number of filters
+            N = P.shape[3]
+            # Height x Width of feature map
+            M = P.shape[1] * P.shape[2]
 
-        # Gram matrix of generated image
-        A = gram(P, N, M)
-        # Gram matrix of style image
-        G = gram(F, N, M)
+            # Gram matrix of generated image
+            A = gram(P, N, M)
+            # Gram matrix of style image
+            G = gram(F, N, M)
 
-        W = 0.2
+        #W = 0.2
 
-        # E is the loss for a particular layer
-        E = (1 / (4 * N**2 * M**2)) * tf.reduce_sum(tf.pow(G - A, 2)) * W
-        loss += E
+            E = (1 / (4 * N**2 * M**2)) * tf.reduce_sum(tf.pow(G - A, 2)) * w
+            loss += E
 
     return loss
 
@@ -110,72 +110,123 @@ def relu(input):
 def avgpool(input):
         return tf.nn.avg_pool(input, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
 
-def create_graph():
+def create_model():
 
-    # Explicit step-by-step graph construction
-    graph = {}
-    graph['input']   = tf.Variable(np.zeros((1, HEIGHT, WIDTH, 3)), dtype = 'float32')
+    model = {}
 
-    graph['conv1_1']  = conv(graph['input'], 0)
-    graph['relu1_1'] = relu(graph['conv1_1'])
+    layers = [
+        'conv1_1', 'relu1_1',
+        'conv1_2', 'relu1_2',
+        'avgpool1',
 
-    graph['conv1_2']  = conv(graph['relu1_1'], 2)
-    graph['relu1_2'] = relu(graph['conv1_2'])
+        'conv2_1', 'relu2_1',
+        'conv2_2', 'relu2_2',
+        'avgpool2',
 
-    graph['avgpool1'] = avgpool(graph['relu1_2'])
+        'conv3_1', 'relu3_1',
+        'conv3_2', 'relu3_2',
+        'conv3_3', 'relu3_3',
+        'conv3_4', 'relu3_4',
+        'avgpool3',
 
-    graph['conv2_1']  = conv(graph['avgpool1'], 5)
-    graph['relu2_1'] = relu(graph['conv2_1'])
+        'conv4_1', 'relu4_1',
+        'conv4_2', 'relu4_2',
+        'conv4_3', 'relu4_3',
+        'conv4_4', 'relu4_4',
+        'avgpool4',
 
-    graph['conv2_2']  = conv(graph['relu2_1'], 7)
-    graph['relu2_2'] = relu(graph['conv2_2'])
+        'conv5_1', 'relu5_1',
+        'conv5_2', 'relu5_2',
+        'conv5_3', 'relu5_3',
+        'conv5_4', 'relu5_4',
+        'avgpool5'
+    ]
 
-    graph['avgpool2'] = avgpool(graph['relu2_2'])
+    # Initial input
+    input = tf.Variable(np.zeros((1, HEIGHT, WIDTH, 3)), dtype = 'float32')
+    model['input'] = input
 
-    graph['conv3_1']  = conv(graph['avgpool2'], 10)
-    graph['relu3_1'] = relu(graph['conv3_1'])
+    for i,layer in enumerate(layers):
 
-    graph['conv3_2']  = conv(graph['relu3_1'], 12)
-    graph['relu3_2'] = relu(graph['conv3_2'])
+        if 'conv' in layer:
+            input = conv(input, i)
 
-    graph['conv3_3']  = conv(graph['relu3_2'], 14)
-    graph['relu3_3'] = relu(graph['conv3_3'])
+        elif 'relu' in layer:
+            input = relu(input)
 
-    graph['conv3_4']  = conv(graph['relu3_3'], 16)
-    graph['relu3_4'] = relu(graph['conv3_4'])
+        elif 'avgpool' in layer:
+            input = avgpool(input)
 
-    graph['avgpool3'] = avgpool(graph['relu3_4'])
+        model[layer] = input
 
-    graph['conv4_1']  = conv(graph['avgpool3'], 19)
-    graph['relu4_1'] = relu(graph['conv4_1'])
+    return model
+"""
+def create_model():
 
-    graph['conv4_2']  = conv(graph['relu4_1'], 21)
-    graph['relu4_2'] = relu(graph['conv4_2'])
+    # Explicit step-by-step model construction
+    model = {}
+    model['input']   = tf.Variable(np.zeros((1, HEIGHT, WIDTH, 3)), dtype = 'float32')
 
-    graph['conv4_3']  = conv(graph['relu4_2'], 23)
-    graph['relu4_3'] = relu(graph['conv4_3'])
+    model['conv1_1']  = conv(model['input'], 0)
+    model['relu1_1'] = relu(model['conv1_1'])
 
-    graph['conv4_4']  = conv(graph['relu4_3'], 25)
-    graph['relu4_4'] = relu(graph['conv4_4'])
+    model['conv1_2']  = conv(model['relu1_1'], 2)
+    model['relu1_2'] = relu(model['conv1_2'])
 
-    graph['avgpool4'] = avgpool(graph['relu4_4'])
+    model['avgpool1'] = avgpool(model['relu1_2'])
 
-    graph['conv5_1']  = conv(graph['avgpool4'], 28)
-    graph['relu5_1'] = relu(graph['conv5_1'])
+    model['conv2_1']  = conv(model['avgpool1'], 5)
+    model['relu2_1'] = relu(model['conv2_1'])
 
-    graph['conv5_2']  = conv(graph['relu5_1'], 30)
-    graph['relu5_2'] = relu(graph['conv5_2'])
+    model['conv2_2']  = conv(model['relu2_1'], 7)
+    model['relu2_2'] = relu(model['conv2_2'])
 
-    graph['conv5_3']  = conv(graph['relu5_2'], 32)
-    graph['relu5_3'] = relu(graph['conv5_3'])
+    model['avgpool2'] = avgpool(model['relu2_2'])
 
-    graph['conv5_4']  = conv(graph['relu5_3'], 34)
-    graph['relu5_4'] = relu(graph['conv5_4'])
+    model['conv3_1']  = conv(model['avgpool2'], 10)
+    model['relu3_1'] = relu(model['conv3_1'])
 
-    graph['avgpool5'] = avgpool(graph['relu5_4'])
+    model['conv3_2']  = conv(model['relu3_1'], 12)
+    model['relu3_2'] = relu(model['conv3_2'])
 
-    return graph
+    model['conv3_3']  = conv(model['relu3_2'], 14)
+    model['relu3_3'] = relu(model['conv3_3'])
 
+    model['conv3_4']  = conv(model['relu3_3'], 16)
+    model['relu3_4'] = relu(model['conv3_4'])
+
+    model['avgpool3'] = avgpool(model['relu3_4'])
+
+    model['conv4_1']  = conv(model['avgpool3'], 19)
+    model['relu4_1'] = relu(model['conv4_1'])
+
+    model['conv4_2']  = conv(model['relu4_1'], 21)
+    model['relu4_2'] = relu(model['conv4_2'])
+
+    model['conv4_3']  = conv(model['relu4_2'], 23)
+    model['relu4_3'] = relu(model['conv4_3'])
+
+    model['conv4_4']  = conv(model['relu4_3'], 25)
+    model['relu4_4'] = relu(model['conv4_4'])
+
+    model['avgpool4'] = avgpool(model['relu4_4'])
+
+    model['conv5_1']  = conv(model['avgpool4'], 28)
+    model['relu5_1'] = relu(model['conv5_1'])
+
+    model['conv5_2']  = conv(model['relu5_1'], 30)
+    model['relu5_2'] = relu(model['conv5_2'])
+
+    model['conv5_3']  = conv(model['relu5_2'], 32)
+    model['relu5_3'] = relu(model['conv5_3'])
+
+    model['conv5_4']  = conv(model['relu5_3'], 34)
+    model['relu5_4'] = relu(model['conv5_4'])
+
+    model['avgpool5'] = avgpool(model['relu5_4'])
+
+    return model
+"""
 
 if __name__ == '__main__':
     with tf.Session() as sess:
@@ -185,8 +236,8 @@ if __name__ == '__main__':
         style = load_image(STYLE)
         input = white_noise(content)
 
-        # Create computation graph and initialize variables
-        model = create_graph()
+        # Create computation model and initialize variables
+        model = create_model()
         sess.run(tf.global_variables_initializer())
 
         # Content and Style loss
@@ -205,10 +256,18 @@ if __name__ == '__main__':
 
         sess.run(tf.global_variables_initializer())
         sess.run(model['input'].assign(input))
-
+"""
         for it in range(ITERATIONS):
             sess.run(train_step)
+            # Print stats for testing
+            if it%100 == 0:
+                # Print every 100 iteration.
+                mixed_image = sess.run(model['input'])
+                print('Iteration %d' % (it))
 
+                filename = 'results/%d.png' % (it)
+                save_image(filename, mixed_image)
+"""
         # Output final image and notify we're done
         output = sess.run(model['input'])
         filename = 'results/stylized.png'
