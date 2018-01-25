@@ -21,7 +21,6 @@ HEIGHT = 600
 # VGG-19 mean RGB
 RGB_MEANS = np.array([123.68, 116.779, 103.939]).reshape((1,1,1,3))
 
-# TODO: move these out?
 def white_noise(content):
     noise = np.random.uniform(-255, 255, content.shape).astype('float32')
     # Mix content with some noise
@@ -81,7 +80,6 @@ def style_loss(sess, model):
         # Gram matrix of style image
         G = gram(F, N, M)
 
-        # TODO: change weights of layers?
         W = 0.2
 
         # E is the loss for a particular layer
@@ -112,7 +110,6 @@ def relu(input):
 def avgpool(input):
         return tf.nn.avg_pool(input, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
 
-# TODO: make loop version of this
 def create_graph():
 
     # Explicit step-by-step graph construction

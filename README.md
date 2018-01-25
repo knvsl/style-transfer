@@ -5,8 +5,7 @@ VGG-19 paper [here](https://arxiv.org/pdf/1409.1556.pdf)
 
 # Required:
 
-Tensorflow
-Pillow (PIL)
-Scipy
+Tensorflow  
+Pillow (PIL)  
+Scipy  
 numpy
-matplotlib (for plotting)
