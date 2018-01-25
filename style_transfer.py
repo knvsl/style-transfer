@@ -10,8 +10,8 @@ LEARNING_RATE = 2.0
 ALPHA = 5
 BETA = 100
 
-CONTENT_LAYERS = ['conv4_2']
-STYLE_LAYERS = ['conv1_1', 'conv2_1', 'conv3_1', 'conv4_1', 'conv5_1']
+CONTENT_LAYERS = ['relu4_2']
+STYLE_LAYERS = ['relu1_1', 'relu2_1', 'relu3_1', 'relu4_1', 'relu5_1']
 
 STYLE = 'img/style/vangogh.jpg'
 CONTENT = 'img/content/sunflower.jpg'
@@ -64,27 +64,27 @@ def style_loss(sess, model):
 
     loss = 0
     #style_layers = ['conv1_1', 'conv2_1', 'conv3_1', 'conv4_1', 'conv5_1']
-    style_weights = [0.5, 1.0, 1.5, 3.0, 4.0]
+    #style_weights = [0.5, 1.0, 1.5, 3.0, 4.0]
 
     for layer in STYLE_LAYERS:
-        for w in style_weights:
-            P = sess.run(model[layer])
-            F = model[layer]
+        #for w in style_weights:
+        P = sess.run(model[layer])
+        F = model[layer]
 
-            # Number of filters
-            N = P.shape[3]
-            # Height x Width of feature map
-            M = P.shape[1] * P.shape[2]
+        # Number of filters
+        N = P.shape[3]
+        # Height x Width of feature map
+        M = P.shape[1] * P.shape[2]
 
-            # Gram matrix of generated image
-            A = gram(P, N, M)
-            # Gram matrix of style image
-            G = gram(F, N, M)
+        # Gram matrix of generated image
+        A = gram(P, N, M)
+        # Gram matrix of style image
+        G = gram(F, N, M)
 
-        #W = 0.2
+        W = 0.2
 
-            E = (1 / (4 * N**2 * M**2)) * tf.reduce_sum(tf.pow(G - A, 2)) * w
-            loss += E
+        E = (1 / (4 * N**2 * M**2)) * tf.reduce_sum(tf.pow(G - A, 2)) * W
+        loss += E
 
     return loss
 
@@ -110,6 +110,7 @@ def relu(input):
 def avgpool(input):
         return tf.nn.avg_pool(input, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
 
+# TODO combine conv + relu together to shorten things?
 def create_model():
 
     model = {}
@@ -238,12 +239,14 @@ if __name__ == '__main__':
 
         # Create computation model and initialize variables
         model = create_model()
-        sess.run(tf.global_variables_initializer())
+
 
         # Content and Style loss
+        sess.run(tf.global_variables_initializer())
         sess.run(model['input'].assign(content))
         L_content = content_loss(sess, model)
 
+        sess.run(tf.global_variables_initializer())
         sess.run(model['input'].assign(style))
         L_style = style_loss(sess, model)
 
@@ -256,9 +259,10 @@ if __name__ == '__main__':
 
         sess.run(tf.global_variables_initializer())
         sess.run(model['input'].assign(input))
-"""
+
         for it in range(ITERATIONS):
             sess.run(train_step)
+
             # Print stats for testing
             if it%100 == 0:
                 # Print every 100 iteration.
@@ -267,7 +271,7 @@ if __name__ == '__main__':
 
                 filename = 'results/%d.png' % (it)
                 save_image(filename, mixed_image)
-"""
+
         # Output final image and notify we're done
         output = sess.run(model['input'])
         filename = 'results/stylized.png'
