@@ -82,7 +82,7 @@ def style_loss(sess, model):
         G = gram(F, N, M)
 
         # TODO: change weights of layers?
-        W = 1.0
+        W = 0.2
 
         # E is the loss for a particular layer
         E = (1 / (4 * N**2 * M**2)) * tf.reduce_sum(tf.pow(G - A, 2)) * W
