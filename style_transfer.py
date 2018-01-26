@@ -7,8 +7,8 @@ import tensorflow as tf
 VGG = scipy.io.loadmat('imagenet-vgg-verydeep-19.mat')
 ITERATIONS = 1000
 LEARNING_RATE = 3.0
-ALPHA = 100
-BETA = 2
+ALPHA = 1
+BETA = 1000
 
 CONTENT_LAYERS = ['conv4_2']
 STYLE_LAYERS = ['conv1_1', 'conv2_1', 'conv3_1', 'conv4_1', 'conv5_1']
@@ -191,15 +191,6 @@ if __name__ == '__main__':
 
         for it in range(ITERATIONS):
             sess.run(train_step)
-
-            # Print stats for testing
-            if it%100 == 0:
-                # Print every 100 iteration.
-                mixed_image = sess.run(model['input'])
-                print('Iteration %d' % (it))
-
-                filename = 'results/%d.png' % (it)
-                save_image(filename, mixed_image)
 
         # Output final image and notify we're done
         output = sess.run(model['input'])
