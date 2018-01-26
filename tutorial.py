@@ -111,53 +111,68 @@ def avgpool(input):
 def create_model():
 
     model = {}
+    model['input']   = tf.Variable(np.zeros((1, HEIGHT, WIDTH, 3)), dtype = 'float32')
 
-    layers = [
-        'conv1_1', 'relu1_1',
-        'conv1_2', 'relu1_2',
-        'avgpool1',
+    model['conv1_1']  = conv(model['input'], 0)
+    model['relu1_1'] = relu(model['conv1_1'])
 
-        'conv2_1', 'relu2_1',
-        'conv2_2', 'relu2_2',
-        'avgpool2',
+    model['conv1_2']  = conv(model['relu1_1'], 2)
+    model['relu1_2'] = relu(model['conv1_2'])
 
-        'conv3_1', 'relu3_1',
-        'conv3_2', 'relu3_2',
-        'conv3_3', 'relu3_3',
-        'conv3_4', 'relu3_4',
-        'avgpool3',
+    model['avgpool1'] = avgpool(model['relu1_2'])
 
-        'conv4_1', 'relu4_1',
-        'conv4_2', 'relu4_2',
-        'conv4_3', 'relu4_3',
-        'conv4_4', 'relu4_4',
-        'avgpool4',
+    model['conv2_1']  = conv(model['avgpool1'], 5)
+    model['relu2_1'] = relu(model['conv2_1'])
 
-        'conv5_1', 'relu5_1',
-        'conv5_2', 'relu5_2',
-        'conv5_3', 'relu5_3',
-        'conv5_4', 'relu5_4',
-        'avgpool5'
-    ]
+    model['conv2_2']  = conv(model['relu2_1'], 7)
+    model['relu2_2'] = relu(model['conv2_2'])
 
-    # Initial input
-    input = tf.Variable(np.zeros((1, HEIGHT, WIDTH, 3)), dtype = 'float32')
-    model['input'] = input
+    model['avgpool2'] = avgpool(model['relu2_2'])
 
-    for i,layer in enumerate(layers):
+    model['conv3_1']  = conv(model['avgpool2'], 10)
+    model['relu3_1'] = relu(model['conv3_1'])
 
-        if 'conv' in layer:
-            input = conv(input, i)
+    model['conv3_2']  = conv(model['relu3_1'], 12)
+    model['relu3_2'] = relu(model['conv3_2'])
 
-        elif 'relu' in layer:
-            input = relu(input)
+    model['conv3_3']  = conv(model['relu3_2'], 14)
+    model['relu3_3'] = relu(model['conv3_3'])
 
-        elif 'avgpool' in layer:
-            input = avgpool(input)
+    model['conv3_4']  = conv(model['relu3_3'], 16)
+    model['relu3_4'] = relu(model['conv3_4'])
 
-        model[layer] = input
+    model['avgpool3'] = avgpool(model['relu3_4'])
+
+    model['conv4_1']  = conv(model['avgpool3'], 19)
+    model['relu4_1'] = relu(model['conv4_1'])
+
+    model['conv4_2']  = conv(model['relu4_1'], 21)
+    model['relu4_2'] = relu(model['conv4_2'])
+
+    model['conv4_3']  = conv(model['relu4_2'], 23)
+    model['relu4_3'] = relu(model['conv4_3'])
+
+    model['conv4_4']  = conv(model['relu4_3'], 25)
+    model['relu4_4'] = relu(model['conv4_4'])
+
+    model['avgpool4'] = avgpool(model['relu4_4'])
+
+    model['conv5_1']  = conv(model['avgpool4'], 28)
+    model['relu5_1'] = relu(model['conv5_1'])
+
+    model['conv5_2']  = conv(model['relu5_1'], 30)
+    model['relu5_2'] = relu(model['conv5_2'])
+
+    model['conv5_3']  = conv(model['relu5_2'], 32)
+    model['relu5_3'] = relu(model['conv5_3'])
+
+    model['conv5_4']  = conv(model['relu5_3'], 34)
+    model['relu5_4'] = relu(model['conv5_4'])
+
+    model['avgpool5'] = avgpool(model['relu5_4'])
 
     return model
+
 
 if __name__ == '__main__':
     with tf.Session() as sess:
@@ -193,17 +208,15 @@ if __name__ == '__main__':
         for it in range(ITERATIONS):
             sess.run(train_step)
 
-            # Print stats for testing
+            # Output progress images
             if it%100 == 0:
-                # Print every 100 iteration.
-                mixed_image = sess.run(model['input'])
-                print('Iteration %d' % (it))
+                output = sess.run(model['input'])
 
-                filename = 'results/%d.png' % (it)
-                save_image(filename, mixed_image)
+                filename = 'results/iteration_%d.png' % (it)
+                save_image(filename, output)
 
         # Output final image and notify we're done
         output = sess.run(model['input'])
-        filename = 'results/stylized.png'
+        filename = 'results/final_image.png'
         save_image(filename, output)
         print('Done.')
