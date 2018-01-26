@@ -7,7 +7,7 @@ VGG = scipy.io.loadmat('imagenet-vgg-verydeep-19.mat')
 WIDTH = 800
 HEIGHT = 600
 CONTENT_LAYERS = ['conv4_2']
-STYLE_LAYERS = ['conv1_1', 'conv2_1', 'conv3_1', 'conv4_1', 'conv5_1']
+STYLE_LAYERS = ['relu1_1', 'relu2_1', 'relu3_1', 'relu4_1', 'relu5_1']
 
 def weight(layer):
     vgg_layers = VGG['layers']
