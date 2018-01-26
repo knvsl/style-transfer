@@ -205,14 +205,14 @@ if __name__ == '__main__':
         sess.run(tf.global_variables_initializer())
         sess.run(model['input'].assign(input))
 
-        for it in range(ITERATIONS):
+        for i in range(ITERATIONS):
             sess.run(train_step)
 
-            # Output progress images
-            if it%100 == 0:
+            # Output progress
+            if i%100 == 0:
                 output = sess.run(model['input'])
-
-                filename = 'results/iteration_%d.png' % (it)
+                print('Iteration: %d' % i)
+                filename = 'results/iteration_%d.png' % (i)
                 save_image(filename, output)
 
         # Output final image and notify we're done
