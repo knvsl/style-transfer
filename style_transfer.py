@@ -21,71 +21,6 @@ HEIGHT = 600
 # VGG-19 mean RGB
 RGB_MEANS = np.array([123.68, 116.779, 103.939]).reshape((1,1,1,3))
 
-def white_noise(content):
-    noise = np.random.uniform(-255, 255, content.shape).astype('float32')
-    # Mix content with some noise
-    image = noise * 0.3 + content * 0.7
-    return image
-
-def load_image(path):
-    image = scipy.misc.imread(path).astype(np.float)
-    # Reshape to add the extra dimension for the network
-    image = image.reshape((1, image.shape[0], image.shape[1], image.shape[2]))
-    # Subtract the means
-    image = image - RGB_MEANS
-    return image
-
-def save_image(path, image):
-    # Add back the means
-    image = image + RGB_MEANS
-    # Drop the extra dimension
-    image = image.reshape(image.shape[1],image.shape[2],image.shape[3])
-    image = np.clip(image, 0, 255).astype('uint8')
-    scipy.misc.imsave(path, image)
-
-def gram(input, n, m):
-    # Reshape to 2D matrix
-    matrix = tf.reshape(input, (m, n))
-    return tf.matmul(tf.transpose(matrix), matrix)
-
-# Using squared error of generated (F) and original (P) as defined in paper
-def content_loss(sess, model):
-
-    loss = 0
-
-    for layer in CONTENT_LAYERS:
-        F = sess.run(model[layer])
-        P = model[layer]
-        N = F.shape[3]
-        M = F.shape[1] * F.shape[2]
-        loss += (1 / (4 * N * M)) * tf.reduce_sum(tf.pow(F - P, 2))
-
-    return loss
-
-def style_loss(sess, model):
-
-    loss = 0
-
-    for layer in STYLE_LAYERS:
-        F = sess.run(model[layer])
-        P = model[layer]
-
-        # Number of filters
-        N = F.shape[3]
-        # Height x Width of feature map
-        M = F.shape[1] * F.shape[2]
-        # Gram matrix of original image
-        A = gram(P, N, M)
-        # Gram matrix of generated image
-        G = gram(F, N, M)
-
-        W = 0.2
-
-        E = (1 / (4 * N**2 * M**2)) * tf.reduce_sum(tf.pow(G - A, 2)) * W
-        loss += E
-
-    return loss
-
 def weight(layer):
     vgg_layers = VGG['layers']
     W = vgg_layers[0][layer][0][0][2][0][0]
@@ -140,7 +75,6 @@ def create_model():
         'avgpool5'
     ]
 
-    # Initial input
     input = tf.Variable(np.zeros((1, HEIGHT, WIDTH, 3)), dtype = 'float32')
     model['input'] = input
 
@@ -159,6 +93,72 @@ def create_model():
 
     return model
 
+def white_noise(content):
+    noise = np.random.uniform(-255, 255, content.shape).astype('float32')
+    # Mix content with some noise
+    image = noise * 0.3 + content * 0.7
+    return image
+
+def load_image(path):
+    image = scipy.misc.imread(path).astype(np.float)
+    # Reshape to add the extra dimension for the network
+    image = image.reshape((1, image.shape[0], image.shape[1], image.shape[2]))
+    # Subtract the means
+    image = image - RGB_MEANS
+    return image
+
+def save_image(path, image):
+    # Add back the means
+    image = image + RGB_MEANS
+    # Drop the extra dimension
+    image = image.reshape(image.shape[1],image.shape[2],image.shape[3])
+    image = np.clip(image, 0, 255).astype('uint8')
+    scipy.misc.imsave(path, image)
+
+def gram(input, n, m):
+    # Reshape to 2D matrix
+    matrix = tf.reshape(input, (m, n))
+    return tf.matmul(tf.transpose(matrix), matrix)
+
+def content_loss(sess, model):
+
+    loss = 0
+
+    for layer in CONTENT_LAYERS:
+        # F is generated image
+        F = sess.run(model[layer])
+        # P is original image
+        P = model[layer]
+        N = F.shape[3]
+        M = F.shape[1] * F.shape[2]
+        loss += (1 / (4 * N * M)) * tf.reduce_sum(tf.pow(F - P, 2))
+
+    return loss
+
+def style_loss(sess, model):
+
+    loss = 0
+
+    for layer in STYLE_LAYERS:
+        F = sess.run(model[layer])
+        P = model[layer]
+
+        # Number of filters
+        N = F.shape[3]
+        # Height x Width of feature map
+        M = F.shape[1] * F.shape[2]
+        # Gram matrix of original image
+        A = gram(P, N, M)
+        # Gram matrix of generated image
+        G = gram(F, N, M)
+
+        W = 0.2
+
+        E = (1 / (4 * N**2 * M**2)) * tf.reduce_sum(tf.pow(G - A, 2)) * W
+        loss += E
+
+    return loss
+
 if __name__ == '__main__':
     with tf.Session() as sess:
 
@@ -169,7 +169,6 @@ if __name__ == '__main__':
 
         # Create computation model and initialize variables
         model = create_model()
-
 
         # Content and Style loss
         sess.run(tf.global_variables_initializer())
