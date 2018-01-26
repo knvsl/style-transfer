@@ -9,17 +9,16 @@ ITERATIONS = 1000
 LEARNING_RATE = 3.0
 ALPHA = 1
 BETA = 1000
+# VGG-19 mean RGB values
+RGB_MEANS = np.array([123.68, 116.779, 103.939]).reshape((1,1,1,3))
 
 CONTENT_LAYERS = ['conv4_2']
 STYLE_LAYERS = ['conv1_1', 'conv2_1', 'conv3_1', 'conv4_1', 'conv5_1']
 
-STYLE = 'img/style/vangogh.jpg'
-CONTENT = 'img/content/sunflower.jpg'
 WIDTH = 800
 HEIGHT = 600
-
-# VGG-19 mean RGB
-RGB_MEANS = np.array([123.68, 116.779, 103.939]).reshape((1,1,1,3))
+STYLE = 'img/style/vangogh.jpg'
+CONTENT = 'img/content/sunflower.jpg'
 
 def weight(layer):
     vgg_layers = VGG['layers']
@@ -167,14 +166,15 @@ if __name__ == '__main__':
         style = load_image(STYLE)
         input = white_noise(content)
 
-        # Create computation model and initialize variables
+        # Create computation graph
         model = create_model()
 
-        # Content and Style loss
+        # Content loss
         sess.run(tf.global_variables_initializer())
         sess.run(model['input'].assign(content))
         L_content = content_loss(sess, model)
 
+        # Style loss
         sess.run(tf.global_variables_initializer())
         sess.run(model['input'].assign(style))
         L_style = style_loss(sess, model)
@@ -186,10 +186,11 @@ if __name__ == '__main__':
         optimizer = tf.train.AdamOptimizer(LEARNING_RATE)
         train_step = optimizer.minimize(L_total)
 
+        # Stylize the image
         sess.run(tf.global_variables_initializer())
         sess.run(model['input'].assign(input))
 
-        for it in range(ITERATIONS):
+        for i in range(ITERATIONS):
             sess.run(train_step)
 
         # Output final image and notify we're done
