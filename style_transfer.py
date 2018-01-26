@@ -6,12 +6,12 @@ import tensorflow as tf
 
 VGG = scipy.io.loadmat('imagenet-vgg-verydeep-19.mat')
 ITERATIONS = 1000
-LEARNING_RATE = 2.0
-ALPHA = 5
-BETA = 100
+LEARNING_RATE = 3.0
+ALPHA = 100
+BETA = 2
 
-CONTENT_LAYERS = ['relu4_2']
-STYLE_LAYERS = ['relu1_1', 'relu2_1', 'relu3_1', 'relu4_1', 'relu5_1']
+CONTENT_LAYERS = ['conv4_2']
+STYLE_LAYERS = ['conv1_1', 'conv2_1', 'conv3_1', 'conv4_1', 'conv5_1']
 
 STYLE = 'img/style/vangogh.jpg'
 CONTENT = 'img/content/sunflower.jpg'
@@ -48,14 +48,16 @@ def gram(input, n, m):
     matrix = tf.reshape(input, (m, n))
     return tf.matmul(tf.transpose(matrix), matrix)
 
-# Using squared error of orginal (F) and generated (P) as defined in paper
+# Using squared error of generated (F) and original (P) as defined in paper
 def content_loss(sess, model):
 
     loss = 0
 
     for layer in CONTENT_LAYERS:
-        P = sess.run(model[layer])
-        F = model[layer]
+        F = sess.run(model[layer])
+        P = model[layer]
+        N = F.shape[3]
+        M = F.shape[1] * F.shape[2]
         loss += (1 / 2) * tf.reduce_sum(tf.pow(F - P, 2))
 
     return loss
@@ -63,22 +65,18 @@ def content_loss(sess, model):
 def style_loss(sess, model):
 
     loss = 0
-    #style_layers = ['conv1_1', 'conv2_1', 'conv3_1', 'conv4_1', 'conv5_1']
-    #style_weights = [0.5, 1.0, 1.5, 3.0, 4.0]
 
     for layer in STYLE_LAYERS:
-        #for w in style_weights:
-        P = sess.run(model[layer])
-        F = model[layer]
+        F = sess.run(model[layer])
+        P = model[layer]
 
         # Number of filters
-        N = P.shape[3]
+        N = F.shape[3]
         # Height x Width of feature map
-        M = P.shape[1] * P.shape[2]
-
-        # Gram matrix of generated image
+        M = F.shape[1] * F.shape[2]
+        # Gram matrix of original image
         A = gram(P, N, M)
-        # Gram matrix of style image
+        # Gram matrix of generated image
         G = gram(F, N, M)
 
         W = 0.2
@@ -110,7 +108,6 @@ def relu(input):
 def avgpool(input):
         return tf.nn.avg_pool(input, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
 
-# TODO combine conv + relu together to shorten things?
 def create_model():
 
     model = {}
@@ -161,10 +158,10 @@ def create_model():
         model[layer] = input
 
     return model
+
 """
 def create_model():
 
-    # Explicit step-by-step model construction
     model = {}
     model['input']   = tf.Variable(np.zeros((1, HEIGHT, WIDTH, 3)), dtype = 'float32')
 
