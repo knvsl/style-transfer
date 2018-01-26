@@ -58,7 +58,7 @@ def content_loss(sess, model):
         P = model[layer]
         N = F.shape[3]
         M = F.shape[1] * F.shape[2]
-        loss += (1 / 2) * tf.reduce_sum(tf.pow(F - P, 2))
+        loss += (1 / (4 * N * M)) * tf.reduce_sum(tf.pow(F - P, 2))
 
     return loss
 
