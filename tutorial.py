@@ -7,10 +7,14 @@ import tensorflow as tf
 VGG = scipy.io.loadmat('imagenet-vgg-verydeep-19.mat')
 ITERATIONS = 1000
 LEARNING_RATE = 3.0
-ALPHA = 100
-BETA = 2
+# Style loss weight
+ALPHA = 1
+# Content loss weight
+BETA = 1000
 
+# Layers used in calculating content loss
 CONTENT_LAYERS = ['conv4_2']
+# Layers used in calculating style loss
 STYLE_LAYERS = ['conv1_1', 'conv2_1', 'conv3_1', 'conv4_1', 'conv5_1']
 
 STYLE = 'img/style/vangogh.jpg'
@@ -18,18 +22,18 @@ CONTENT = 'img/content/sunflower.jpg'
 WIDTH = 800
 HEIGHT = 600
 
-# VGG-19 mean RGB
+# VGG-19 mean RGB values 
 RGB_MEANS = np.array([123.68, 116.779, 103.939]).reshape((1,1,1,3))
 
 def white_noise(content):
     noise = np.random.uniform(-255, 255, content.shape).astype('float32')
-    # Mix content with some noise
+    # Mix content image with some noise
     image = noise * 0.3 + content * 0.7
     return image
 
 def load_image(path):
     image = scipy.misc.imread(path).astype(np.float)
-    # Reshape to add the extra dimension for the network
+    # Reshape to add the extra dimension the network expects
     image = image.reshape((1, image.shape[0], image.shape[1], image.shape[2]))
     # Subtract the means
     image = image - RGB_MEANS
@@ -48,16 +52,22 @@ def gram(input, n, m):
     matrix = tf.reshape(input, (m, n))
     return tf.matmul(tf.transpose(matrix), matrix)
 
-# Using squared error of generated (F) and original (P) as defined in paper
 def content_loss(sess, model):
 
     loss = 0
 
     for layer in CONTENT_LAYERS:
+        # F is feature map of generated image
         F = sess.run(model[layer])
+        # P is the feature map of the original image
         P = model[layer]
+        # Number of filters
         N = F.shape[3]
+        # Height x width of feature map
         M = F.shape[1] * F.shape[2]
+        # The paper outlines the loss as:
+        # (1 / 2) * tf.reduce_sum(tf.pow(F - P, 2))
+        # However it seems most people get better results computing the loss as below
         loss += (1 / (4 * N * M)) * tf.reduce_sum(tf.pow(F - P, 2))
 
     return loss
@@ -67,7 +77,9 @@ def style_loss(sess, model):
     loss = 0
 
     for layer in STYLE_LAYERS:
+        # F is feature map of generated image
         F = sess.run(model[layer])
+        # P is the feature map of the original image
         P = model[layer]
 
         # Number of filters
@@ -79,8 +91,11 @@ def style_loss(sess, model):
         # Gram matrix of generated image
         G = gram(F, N, M)
 
+        # weight of 1/5 as outlined in paper
         W = 0.2
 
+        # E is the loss at an individual layer, squared error of the Gram matrices
+        # For total loss we sum E x w over all layers
         E = (1 / (4 * N**2 * M**2)) * tf.reduce_sum(tf.pow(G - A, 2)) * W
         loss += E
 
@@ -110,6 +125,7 @@ def avgpool(input):
 
 def create_model():
 
+    # Explicit step-by-step graph construction
     model = {}
     model['input']   = tf.Variable(np.zeros((1, HEIGHT, WIDTH, 3)), dtype = 'float32')
 
@@ -170,7 +186,6 @@ def create_model():
     model['relu5_4'] = relu(model['conv5_4'])
 
     model['avgpool5'] = avgpool(model['relu5_4'])
-
     return model
 
 
@@ -185,12 +200,12 @@ if __name__ == '__main__':
         # Create computation model and initialize variables
         model = create_model()
 
-
-        # Content and Style loss
+        # Content loss
         sess.run(tf.global_variables_initializer())
         sess.run(model['input'].assign(content))
         L_content = content_loss(sess, model)
 
+        # Style loss
         sess.run(tf.global_variables_initializer())
         sess.run(model['input'].assign(style))
         L_style = style_loss(sess, model)

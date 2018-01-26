@@ -63,6 +63,7 @@ def create_model():
         'avgpool5'
     ]
 
+    # Initial input is the image
     input = tf.Variable(np.zeros((1, HEIGHT, WIDTH, 3)), dtype = 'float32')
     model['input'] = input
 
@@ -86,26 +87,13 @@ def gram(input, n, m):
     matrix = tf.reshape(input, (m, n))
     return tf.matmul(tf.transpose(matrix), matrix)
 
-def content_loss(sess, model):
-
-    loss = 0
-
-    for layer in CONTENT_LAYERS:
-        # F is generated image
-        F = sess.run(model[layer])
-        # P is original image
-        P = model[layer]
-        N = F.shape[3]
-        M = F.shape[1] * F.shape[2]
-        loss += (1 / (4 * N * M)) * tf.reduce_sum(tf.pow(F - P, 2))
-
-    return loss
-
 def style_loss(sess, model):
 
     loss = 0
 
     for layer in STYLE_LAYERS:
+        # F is generated image
+        # P is original image
         F = sess.run(model[layer])
         P = model[layer]
 
@@ -122,5 +110,20 @@ def style_loss(sess, model):
 
         E = (1 / (4 * N**2 * M**2)) * tf.reduce_sum(tf.pow(G - A, 2)) * W
         loss += E
+
+    return loss
+
+def content_loss(sess, model):
+
+    loss = 0
+
+    for layer in CONTENT_LAYERS:
+        # F is generated image
+        # P is original image
+        F = sess.run(model[layer])
+        P = model[layer]
+        N = F.shape[3]
+        M = F.shape[1] * F.shape[2]
+        loss += (1 / (4 * N * M)) * tf.reduce_sum(tf.pow(F - P, 2))
 
     return loss
