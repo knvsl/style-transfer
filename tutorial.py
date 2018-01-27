@@ -7,11 +7,11 @@ import tensorflow as tf
 VGG = scipy.io.loadmat('imagenet-vgg-verydeep-19.mat')
 ITERATIONS = 1000
 LEARNING_RATE = 3.0
-ALPHA = 100
-BETA = 2
+ALPHA = 1
+BETA = 100
 
-CONTENT_LAYERS = ['conv4_2']
-STYLE_LAYERS = ['conv1_1', 'conv2_1', 'conv3_1', 'conv4_1', 'conv5_1']
+CONTENT_LAYERS = ['relu4_2']
+STYLE_LAYERS = ['relu1_1', 'relu2_1', 'relu3_1', 'relu4_1', 'relu5_1']
 
 STYLE = 'img/style/vangogh.jpg'
 CONTENT = 'img/content/sunflower.jpg'
@@ -21,13 +21,13 @@ HEIGHT = 600
 # VGG-19 mean RGB
 RGB_MEANS = np.array([123.68, 116.779, 103.939]).reshape((1,1,1,3))
 
-def white_noise(content):
+def noisy_img(content):
     noise = np.random.uniform(-255, 255, content.shape).astype('float32')
     # Mix content with some noise
     image = noise * 0.3 + content * 0.7
     return image
 
-def load_image(path):
+def load_img(path):
     image = scipy.misc.imread(path).astype(np.float)
     # Reshape to add the extra dimension for the network
     image = image.reshape((1, image.shape[0], image.shape[1], image.shape[2]))
@@ -35,7 +35,7 @@ def load_image(path):
     image = image - RGB_MEANS
     return image
 
-def save_image(path, image):
+def save_img(path, image):
     # Add back the means
     image = image + RGB_MEANS
     # Drop the extra dimension
@@ -178,9 +178,9 @@ if __name__ == '__main__':
     with tf.Session() as sess:
 
         # Load images
-        content = load_image(CONTENT)
-        style = load_image(STYLE)
-        input = white_noise(content)
+        content = load_img(CONTENT)
+        style = load_img(STYLE)
+        input = noisy_img(content)
 
         # Create computation model and initialize variables
         model = create_model()
@@ -213,10 +213,10 @@ if __name__ == '__main__':
                 output = sess.run(model['input'])
                 print('Iteration: %d' % i)
                 filename = 'results/iteration_%d.png' % (i)
-                save_image(filename, output)
+                save_img(filename, output)
 
         # Output final image and notify we're done
         output = sess.run(model['input'])
         filename = 'results/final_image.png'
-        save_image(filename, output)
+        save_img(filename, output)
         print('Done.')
