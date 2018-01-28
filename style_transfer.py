@@ -11,9 +11,9 @@ from model import style_loss
 import tensorflow as tf
 
 ITERATIONS = 1000
-LEARNING_RATE = 3.0
-ALPHA = 1
-BETA = 1000
+LEARNING_RATE = 5.0
+ALPHA = 10000
+BETA = 1
 
 STYLE = 'img/style/vangogh.jpg'
 CONTENT = 'img/content/sunflower.jpg'
@@ -24,7 +24,8 @@ if __name__ == '__main__':
         # Load images
         content = load_img(CONTENT)
         style = load_img(STYLE)
-        input = noisy_img(content)
+        #input = noisy_img(content)
+        input = content
 
         # Create computation graph
         model = create_model()
@@ -50,11 +51,17 @@ if __name__ == '__main__':
         sess.run(tf.global_variables_initializer())
         sess.run(model['input'].assign(input))
 
-        for _ in range(ITERATIONS):
+        for i in range(ITERATIONS):
             sess.run(train_step)
+            # Output progress
+            if i%100 == 0:
+                output = sess.run(model['input'])
+                print('Iteration: %d' % i)
+                filename = 'results/iteration_%d.png' % (i)
+                save_img(filename, output)
 
         # Output final image and notify we're done
         output = sess.run(model['input'])
-        filename = 'results/stylized.png'
+        filename = 'results/final_image.png'
         save_img(filename, output)
         print('Done.')
