@@ -11,9 +11,9 @@ from model import style_loss
 import tensorflow as tf
 
 ITERATIONS = 1000
-LEARNING_RATE = 3.0
-ALPHA = 1
-BETA = 1000
+LEARNING_RATE = 5.0
+ALPHA = 10000
+BETA = 1
 
 STYLE = 'img/style/vangogh.jpg'
 CONTENT = 'img/content/sunflower.jpg'
@@ -24,7 +24,8 @@ if __name__ == '__main__':
         # Load images
         content = load_img(CONTENT)
         style = load_img(STYLE)
-        input = noisy_img(content)
+        #input = noisy_img(content)
+        input = content
 
         # Create computation graph
         model = create_model()
