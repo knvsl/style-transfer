@@ -8,7 +8,7 @@ WIDTH = 800
 HEIGHT = 600
 CONTENT_LAYERS = ['relu2_2']
 STYLE_LAYERS = ['relu1_1', 'relu2_1', 'relu3_1', 'relu4_1', 'relu5_1']
-STYLE_WEIGHTS = [5.0, 4.0, 3.0, 2.0, 1.0] 
+STYLE_WEIGHTS = [5.0, 4.0, 3.0, 2.0, 1.0]
 
 def weight(layer):
     vgg_layers = VGG['layers']
@@ -93,26 +93,6 @@ def style_loss(sess, model):
     loss = 0
 
     for layer in STYLE_LAYERS:
-<<<<<<< HEAD
-        # F is generated image
-        # P is original image
-        F = sess.run(model[layer])
-        P = model[layer]
-
-        # Number of filters
-        N = F.shape[3]
-        # Height x Width of feature map
-        M = F.shape[1] * F.shape[2]
-        # Gram matrix of original image
-        A = gram(P, N, M)
-        # Gram matrix of generated image
-        G = gram(F, N, M)
-
-        W = 0.2
-
-        E = (1 / (4 * N**2 * M**2)) * tf.reduce_sum(tf.pow(G - A, 2)) * W
-        loss += E
-=======
         for w in STYLE_WEIGHTS:
             # F is generated image
             # P is original image
@@ -132,7 +112,6 @@ def style_loss(sess, model):
 
             E = (1 / (4 * N**2 * M**2)) * tf.reduce_sum(tf.pow(G - A, 2)) * w
             loss += E
->>>>>>> master
 
     return loss
 

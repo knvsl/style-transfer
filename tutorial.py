@@ -13,14 +13,21 @@ ALPHA = 1
 BETA = 1000
 
 # Layers used in calculating content loss
-CONTENT_LAYERS = ['conv4_2']
+CONTENT_LAYERS = ['relu2_2']
 # Layers used in calculating style loss
-STYLE_LAYERS = ['conv1_1', 'conv2_1', 'conv3_1', 'conv4_1', 'conv5_1']
+STYLE_LAYERS = ['relu1_1', 'relu2_1', 'relu3_1', 'relu4_1', 'relu5_1']
+# Weights for style layers
+STYLE_WEIGHTS = [0.2, 0.2, 0.2, 0.2, 0.2]
 
 STYLE = 'img/style/vangogh.jpg'
 CONTENT = 'img/content/sunflower.jpg'
 WIDTH = 800
 HEIGHT = 600
+
+
+
+
+
 
 # VGG-19 mean RGB values
 RGB_MEANS = np.array([123.68, 116.779, 103.939]).reshape((1,1,1,3))
@@ -77,27 +84,25 @@ def style_loss(sess, model):
     loss = 0
 
     for layer in STYLE_LAYERS:
-        # F is feature map of generated image
-        F = sess.run(model[layer])
-        # P is the feature map of the original image
-        P = model[layer]
+        for w in STYLE_WEIGHTS:
+            # F is generated image
+            # P is original image
+            F = sess.run(model[layer])
+            P = model[layer]
 
-        # Number of filters
-        N = F.shape[3]
-        # Height x Width of feature map
-        M = F.shape[1] * F.shape[2]
-        # Gram matrix of original image
-        A = gram(P, N, M)
-        # Gram matrix of generated image
-        G = gram(F, N, M)
+            # Number of filters
+            N = F.shape[3]
+            # Height x Width of feature map
+            M = F.shape[1] * F.shape[2]
+            # Gram matrix of original image
+            A = gram(P, N, M)
+            # Gram matrix of generated image
+            G = gram(F, N, M)
 
-        # weight of 1/5 as outlined in paper
-        W = 0.2
+            #W = 0.2
 
-        # E is the loss at an individual layer, squared error of the Gram matrices
-        # For total loss we sum E x w over all layers
-        E = (1 / (4 * N**2 * M**2)) * tf.reduce_sum(tf.pow(G - A, 2)) * W
-        loss += E
+            E = (1 / (4 * N**2 * M**2)) * tf.reduce_sum(tf.pow(G - A, 2)) * w
+            loss += E
 
     return loss
 
@@ -232,6 +237,6 @@ if __name__ == '__main__':
 
         # Output final image and notify we're done
         output = sess.run(model['input'])
-        filename = 'results/final_image.png'
+        filename = 'results/final_image_iteration_%d.png' % (ITERATIONS)
         save_img(filename, output)
         print('Done.')
