@@ -51,17 +51,11 @@ if __name__ == '__main__':
         sess.run(tf.global_variables_initializer())
         sess.run(model['input'].assign(input))
 
-        for i in range(ITERATIONS):
+        for _ in range(ITERATIONS):
             sess.run(train_step)
-            # Output progress
-            if i%100 == 0:
-                output = sess.run(model['input'])
-                print('Iteration: %d' % i)
-                filename = 'results/iteration_%d.png' % (i)
-                save_img(filename, output)
 
         # Output final image and notify we're done
         output = sess.run(model['input'])
-        filename = 'results/final_image.png'
+        filename = 'results/stylized_image.png'
         save_img(filename, output)
         print('Done.')
