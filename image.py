@@ -7,7 +7,7 @@ RGB_MEANS = np.array([123.68, 116.779, 103.939]).reshape((1,1,1,3))
 def noisy_img(content):
     noise = np.random.uniform(-255, 255, content.shape).astype('float32')
     # Mix content with some noise
-    image = noise * 0.3 + content * 0.7
+    image = noise * 0.5 + content * 0.5
     return image
 
 def load_img(path):
