@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+<!-- Begin Jekyll SEO tag v2.3.0 -->
+<title>style-transfer</title>
+<meta property="og:title" content="style-transfer" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/setup.html" />
+<meta property="og:url" content="http://localhost:4000/setup.html" />
+<meta property="og:site_name" content="style-transfer" />
+<script type="application/ld+json">
+{"name":null,"description":null,"author":null,"@type":"WebPage","url":"http://localhost:4000/setup.html","publisher":null,"image":null,"headline":"style-transfer","dateModified":null,"datePublished":null,"sameAs":null,"mainEntityOfPage":null,"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=b277f0485aa3decc6c4118776f3b66d547376496">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <a href="http://github.com/pages/k1mby/style-transfer"> <h1>style-transfer</h1> </a>
+        <p></p>
+
+        
+          <!--<p class="view"><a href="http://github.com/k1mby/style-transfer">View the Project on GitHub <small></small></a></p>-->
+        
+
+        
+
+        
+          <br>
+          <ul class="downloads">
+            <li><a href="https://github.com/k1mby/teapot-demo/archive/master.zip">Download <strong>ZIP File</strong></a></li>
+            <li><a href="https://github.com/k1mby/teapot-demo/archive/master.tar.gz">Download <strong>TAR Ball</strong></a></li>
+            <li><a href="http://github.com/k1mby/style-transfer">View On <strong>GitHub</strong></a></li>
+          </ul>
+          <br>
+        
+          <h3>Documentation</h3>
+          <a href="setup.html">Setup</a><br>
+          <a href="intro.html">Introduction</a><br>
+          <a href="examples.html">Example Output</a><br>
+      </header>
+      <section>
+
+      <p><strong>Sections:</strong><br />
+<a href="#organization">Code Organization</a><br />
+<a href="#setup">Setup</a><br />
+<a href="./">Back to main</a>
+<br /></p>
+
+<p><a name="organization"></a></p>
+<h2 id="code-organization">Code Organization</h2>
+
+<p><code class="highlighter-rouge">style_transfer.py</code>
+Run this to apply style transfer to an image. Contains the main code that sets up the model, evaluates the losses, and outputs the result. The content and style images are defined here as well as the iterations and alpha/beta ratio.</p>
+
+<p><code class="highlighter-rouge">model.py</code>
+Contains all the functions that build the computation graph and compute the losses. The content and style layers and their weights are defined here.</p>
+
+<p><code class="highlighter-rouge">image.py</code>
+Helpers to load, save create white noise images.</p>
+
+<p><code class="highlighter-rouge">tutorial.py</code>
+Commented out version with explanations and is more step-by-step for understanding.</p>
+
+<h3 id="img">img</h3>
+<p>All image related directories and files.</p>
+
+<p><code class="highlighter-rouge">content</code>
+Contains content images.</p>
+
+<p><code class="highlighter-rouge">style</code>
+Contains style images.</p>
+
+<p><code class="highlighter-rouge">results</code>
+The output directory where the final images are saved.</p>
+
+<p><br /></p>
+
+<hr />
+<p><a name="setup"></a></p>
+<h2 id="setup">Setup</h2>
+
+<p>You will need the following requirements:</p>
+
+<p>Tensorflow<br />
+Pillow<br />
+Scipy<br />
+numpy</p>
+
+<p>You will also need to <a href="http://www.vlfeat.org/matconvnet/pretrained/#downloading-the-pre-trained-models">download</a> the MatConvNet VGG-19 model and place it within the <code class="highlighter-rouge">style-transfer</code> directory.</p>
+
+<p>Instructions on installing Tensorflow <a href="https://www.tensorflow.org/install/">here</a><br />
+Instructions on installing Conda <a href="https://conda.io/docs/user-guide/install/index.html">here</a><br />
+Binaries for different Tensorflow builds by <a href="https://github.com/lakshayg/tensorflow-build">@lakshayg on Github</a></p>
+
+<h3 id="to-run-style-transfer">To run style transfer:</h3>
+
+<ol>
+  <li>
+    <p>Download the source code</p>
+  </li>
+  <li>
+    <p>Download the VGG-19 file and place it within the <code class="highlighter-rouge">style-transfer</code> project directory</p>
+  </li>
+  <li>
+    <p><em>OPTIONALLY</em> Place your images (scaled to 800x600) within the appropriate style or content folder.</p>
+  </li>
+  <li>
+    <p>Navigate inside the <code class="highlighter-rouge">style-transfer</code> project directory, activate your tensorflow environment if necessary, and run the <code class="highlighter-rouge">style_transfer.py</code> file.</p>
+  </li>
+</ol>
+
+<p>The result will output to the <code class="highlighter-rouge">results</code> directory under the name <code class="highlighter-rouge">stylized_image.png</code>.</p>
+
+<h3 id="notes">Notes:</h3>
+
+<p>I used conda and installed CPU-only tensorflow 1.4.0 with support for SSE4.1, SSE4.2, AVX, AVX2, FMA.</p>
+
+<p>I was limited to CPU-only tensorflow and if you are as well I would highly suggest you install it with the supports mentioned above otherwise it will take a VERY long time. It still took me about 4/5 hours for 1000 iterations but you can also take advantage of cloud services.</p>
+
+<p>I also tried running this using the Deep Learning AMI (Amazon Linux) Version 3.0 on a g2.2xlarge instance. This is one of the cheaper GPU instances available and you can always terminate the instance as soon as you’re done.</p>
+
+<p>AWS DLAMI info <a href="https://docs.aws.amazon.com/dlami/latest/devguide/gs.html">here</a><br />
+AWS EC2 Pricing <a href="https://aws.amazon.com/ec2/pricing/">here</a></p>
+
+
+      </section>
+      <footer>
+        
+        <p>This project is maintained by <a href="http://github.com/k1mby">k1mby</a></p>
+        
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="/assets/js/scale.fix.js"></script>
+
+
+  
+  </body>
+</html>

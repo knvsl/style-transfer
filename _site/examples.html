@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+<!-- Begin Jekyll SEO tag v2.3.0 -->
+<title>style-transfer</title>
+<meta property="og:title" content="style-transfer" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/examples.html" />
+<meta property="og:url" content="http://localhost:4000/examples.html" />
+<meta property="og:site_name" content="style-transfer" />
+<script type="application/ld+json">
+{"name":null,"description":null,"author":null,"@type":"WebPage","url":"http://localhost:4000/examples.html","publisher":null,"image":null,"headline":"style-transfer","dateModified":null,"datePublished":null,"sameAs":null,"mainEntityOfPage":null,"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=b277f0485aa3decc6c4118776f3b66d547376496">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <a href="http://github.com/pages/k1mby/style-transfer"> <h1>style-transfer</h1> </a>
+        <p></p>
+
+        
+          <!--<p class="view"><a href="http://github.com/k1mby/style-transfer">View the Project on GitHub <small></small></a></p>-->
+        
+
+        
+
+        
+          <br>
+          <ul class="downloads">
+            <li><a href="https://github.com/k1mby/teapot-demo/archive/master.zip">Download <strong>ZIP File</strong></a></li>
+            <li><a href="https://github.com/k1mby/teapot-demo/archive/master.tar.gz">Download <strong>TAR Ball</strong></a></li>
+            <li><a href="http://github.com/k1mby/style-transfer">View On <strong>GitHub</strong></a></li>
+          </ul>
+          <br>
+        
+          <h3>Documentation</h3>
+          <a href="setup.html">Setup</a><br>
+          <a href="intro.html">Introduction</a><br>
+          <a href="examples.html">Example Output</a><br>
+      </header>
+      <section>
+
+      <p><strong>Sections:</strong><br />
+<a href="#discussion">Discussion</a><br />
+<a href="#results">Results</a><br />
+<a href="./">Back to main</a>
+<br /></p>
+
+<p>All of the results <a href="#results">below</a> were obtained using the following settings:</p>
+
+<ul>
+  <li>
+    <p>1000 iterations, as seen below you can get strong results after only a few hundred iterations</p>
+  </li>
+  <li>
+    <p>All images resized to be 800 x 600</p>
+  </li>
+  <li>
+    <p>Using the pre-processed content image as the input image (instead of white noise)</p>
+  </li>
+  <li>
+    <p>Computing the content loss using conv2_2 instead of conv4_2</p>
+  </li>
+  <li>
+    <p>alpha/beta ratio = 10 000/1, putting more emphasis on style</p>
+  </li>
+  <li>
+    <p>The style layer weights decrease as the layer increases 5.0, 4.0, 3.0, 2.0, 1.0
+<br /></p>
+  </li>
+</ul>
+
+<hr />
+<p><a name="discussion"></a></p>
+<h3 id="discussion">Discussion</h3>
+
+<p>In the original paper the input image was a white noise image and the alpha/beta ration was between 10e<sup>-4</sup> and 10e<sup>-3</sup>. I found I saw better results by using the content image as the base and having a large alpha value to then place more emphasis on the style.</p>
+
+<p>I also used conv2_2 to compute the content loss instead of conv4_2. As outlined <a href="https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Gatys_Image_Style_Transfer_CVPR_2016_paper.pdf">here</a>, using conv2_2 instead of conv4_2 results in preserving more of the finer structure of the original image. I saw a slight improvement from this.</p>
+
+<p>The other main difference is that in the original paper the style layer weights are all set to 1.0 divided by the total number of layers used in computing style loss.</p>
+
+<p>The features of higher layers get increasingly complex and abstract, so I set the style layer weights to decrease as the layers increase, to put more emphasis on the basic structures.</p>
+
+<p>This gave me a noticeable improvement for styles defined by “coarse” textures such as Van Gogh’s aggressive brush strokes or Picasso’s cubist paintings.</p>
+
+<p>Fine tuning for individual style images can definitely make a difference, especially when considering the vast differences in style between say Van Gogh’s aggressive brush strokes and Gauguin’s bold primitivism.
+<br /></p>
+
+<hr />
+<p><a name="results"></a></p>
+<h3 id="results-comparison">Results Comparison</h3>
+
+<h4 id="common-content-image-from-this-wallpaper-site">Common content image from <a href="https://wallpapersontheweb.net/1401-sunflower-earth/">this</a> wallpaper site</h4>
+
+<p>Before pre-processing:</p>
+
+<p align="center">
+<img src="/img/content/sunflower.jpg" width="400px" />
+</p>
+
+<p>After pre-processing:</p>
+
+<p align="center">
+<img src="/img/results/vangogh/iteration_0.png" width="400px" />
+</p>
+<hr />
+<h4 id="the-starry-night-vincent-van-gogh-1889">“The Starry Night”, Vincent Van Gogh, 1889</h4>
+
+<p align="center">
+<img src="/img/style/vangogh.jpg" width="400px" />
+</p>
+
+<p align="center">
+<img src="/img/results/vangogh/stylized_image.png" width="400px" />
+</p>
+<hr />
+<h3 id="woman-with-a-hat-henri-matisse-1905">“Woman With A Hat”, Henri Matisse, 1905</h3>
+<p>(<em>rotated for input</em>)</p>
+
+<p align="center">
+<img src="/img/style/matisse.jpg" width="400px" />
+</p>
+
+<p align="center">
+<img src="/img/results/matisse/stylized_image.png" width="400px" />
+</p>
+<hr />
+<h3 id="houses-on-the-hill-pablo-picasso-1902">“Houses On The Hill”, Pablo Picasso, 1902</h3>
+
+<p align="center">
+<img src="/img/style/picasso.jpg" width="400px" />
+</p>
+
+<p align="center">
+<img src="/img/results/picasso/stylized_image.png" width="400px" />
+</p>
+<hr />
+<h3 id="riders-on-the-beach-paul-gauguin-1902">“Riders On The Beach”, Paul Gauguin, 1902</h3>
+
+<p align="center">
+<img src="/img/style/gauguin.jpg" width="400px" />
+</p>
+
+<p align="center">
+<img src="/img/results/gauguin/stylized_image.png" width="400px" />
+</p>
+
+
+      </section>
+      <footer>
+        
+        <p>This project is maintained by <a href="http://github.com/k1mby">k1mby</a></p>
+        
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="/assets/js/scale.fix.js"></script>
+
+
+  
+  </body>
+</html>
