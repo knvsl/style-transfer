@@ -6,9 +6,9 @@ import tensorflow as tf
 VGG = scipy.io.loadmat('imagenet-vgg-verydeep-19.mat')
 WIDTH = 800
 HEIGHT = 600
-CONTENT_LAYERS = ['relu4_2'] #TODO: compare this too!
+CONTENT_LAYERS = ['relu2_2']
 STYLE_LAYERS = ['relu1_1', 'relu2_1', 'relu3_1', 'relu4_1', 'relu5_1']
-STYLE_WEIGHTS = [5.0, 4.0, 3.0, 4.0, 5.0] # TODO try this out
+STYLE_WEIGHTS = [5.0, 4.0, 3.0, 2.0, 1.0]
 
 def weight(layer):
     vgg_layers = VGG['layers']
@@ -103,10 +103,20 @@ def style_loss(sess, model):
             N = F.shape[3]
             # Height x Width of feature map
             M = F.shape[1] * F.shape[2]
+<<<<<<< HEAD
 
             A = gram(P, N, M)
             G = gram(F, N, M)
 
+=======
+            # Gram matrix of original image
+            A = gram(P, N, M)
+            # Gram matrix of generated image
+            G = gram(F, N, M)
+
+            #W = 0.2
+
+>>>>>>> cd418fbffa0d2cbf53d9ff3ff1c005e13018f5c3
             E = (1 / (4 * N**2 * M**2)) * tf.reduce_sum(tf.pow(G - A, 2)) * w
             loss += E
 

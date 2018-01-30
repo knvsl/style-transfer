@@ -24,6 +24,11 @@ CONTENT = 'img/content/sunflower.jpg'
 WIDTH = 800
 HEIGHT = 600
 
+
+
+
+
+
 # VGG-19 mean RGB values
 RGB_MEANS = np.array([123.68, 116.779, 103.939]).reshape((1,1,1,3))
 
