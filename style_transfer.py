@@ -15,7 +15,7 @@ LEARNING_RATE = 5.0
 ALPHA = 10000
 BETA = 1
 
-STYLE = 'img/style/vangogh.jpg'
+STYLE = 'img/style/matisse.jpg'
 CONTENT = 'img/content/sunflower.jpg'
 
 if __name__ == '__main__':
@@ -43,19 +43,24 @@ if __name__ == '__main__':
         # Total loss
         L_total = BETA * L_content + ALPHA * L_style
 
-        # Minimize loss
+        # Using Adam optimizer
         optimizer = tf.train.AdamOptimizer(LEARNING_RATE)
         train_step = optimizer.minimize(L_total)
 
-        # Stylize the image
+        # Input our base image
         sess.run(tf.global_variables_initializer())
         sess.run(model['input'].assign(input))
 
+        # Run gradient descent
         for _ in range(ITERATIONS):
             sess.run(train_step)
 
-        # Output final image and notify we're done
+        # Create results directory
+        if not os.path.exists('img/results'):
+            os.mkdirs('img/results')
+
+        # Save final image
         output = sess.run(model['input'])
-        filename = 'results/stylized_image.png'
+        filename = 'img/results/stylized_image.png'
         save_img(filename, output)
         print('Done.')
