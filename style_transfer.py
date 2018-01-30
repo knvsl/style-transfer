@@ -62,6 +62,9 @@ if __name__ == '__main__':
                 save_img(filename, output)
 
         # Output final image and notify we're done
+        if not os.path.exists('/results'):
+            os.mkdir('/results')
+
         output = sess.run(model['input'])
         filename = 'results/stylized_image.png'
         save_img(filename, output)

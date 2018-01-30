@@ -13,7 +13,7 @@ ALPHA = 1
 BETA = 1000
 
 # Layers used in calculating content loss
-CONTENT_LAYERS = ['relu2_2']
+CONTENT_LAYERS = ['relu4_2']
 # Layers used in calculating style loss
 STYLE_LAYERS = ['relu1_1', 'relu2_1', 'relu3_1', 'relu4_1', 'relu5_1']
 # Weights for style layers
@@ -23,11 +23,6 @@ STYLE = 'img/style/vangogh.jpg'
 CONTENT = 'img/content/sunflower.jpg'
 WIDTH = 800
 HEIGHT = 600
-
-
-
-
-
 
 # VGG-19 mean RGB values
 RGB_MEANS = np.array([123.68, 116.779, 103.939]).reshape((1,1,1,3))
@@ -232,11 +227,11 @@ if __name__ == '__main__':
             if i%100 == 0:
                 output = sess.run(model['input'])
                 print('Iteration: %d' % i)
-                filename = 'results/iteration_%d.png' % (i)
+                filename = 'img/results/iteration_%d.png' % (i)
                 save_img(filename, output)
 
         # Output final image and notify we're done
         output = sess.run(model['input'])
-        filename = 'results/final_image_iteration_%d.png' % (ITERATIONS)
+        filename = 'img/results/final_image_iteration_%d.png' % (ITERATIONS)
         save_img(filename, output)
         print('Done.')

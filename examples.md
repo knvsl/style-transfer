@@ -25,15 +25,15 @@ ___
 
 In the original paper the input image was a white noise image and the alpha/beta ration was between 10e<sup>-4</sup> and 10e<sup>-3</sup>. I found I saw better results by using the content image as the base and having a large alpha value to then place more emphasis on the style.  
 
-I also used conv2_2 to compute the content loss instead of conv4_2. As outlined [here](https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Gatys_Image_Style_Transfer_CVPR_2016_paper.pdf), using conv2_2 instead of conv4_2 results in preserving more of the finer structure of the original image. I saw a slight improvement from this.
+I also used conv2_2 to compute the content loss instead of conv4_2. As outlined [here](https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Gatys_Image_Style_Transfer_CVPR_2016_paper.pdf), using conv2_2 instead of conv4_2 results in preserving more of the finer structure of the original image. The difference was minimal for me.
 
 The other main difference is that in the original paper the style layer weights are all set to 1.0 divided by the total number of layers used in computing style loss.
 
-The features of higher layers get increasingly complex and abstract, so I set the style layer weights to decrease as the layers increase, to put more emphasis on the basic structures.
+The features of higher layers get increasingly complex and abstract, so I set the style layer weights to decrease as the layers increase, to put more emphasis on the basic structures. Changing these weights gave noticeably different results if you are looking to experiment.
 
 This gave me a noticeable improvement for styles defined by "coarse" textures such as Van Gogh's aggressive brush strokes or Picasso's cubist paintings.
 
-Fine tuning for individual style images can definitely make a difference, especially when considering the vast differences in style between say Van Gogh's aggressive brush strokes and Gauguin's bold primitivism.
+Fine tuning for individual style images can definitely make a difference, especially when considering the vast differences in style.
 <br>
 
 ___
