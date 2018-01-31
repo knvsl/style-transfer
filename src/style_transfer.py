@@ -24,7 +24,8 @@ if __name__ == '__main__':
         # Load images
         content = load_img(CONTENT)
         style = load_img(STYLE)
-        #input = noisy_img(content)
+
+        # Using content as base instead of white noise
         input = content
 
         # Create computation graph
@@ -57,7 +58,7 @@ if __name__ == '__main__':
 
         # Create results directory
         if not os.path.exists('img/results'):
-            os.mkdirs('img/results')
+            os.mkdir('img/results')
 
         # Save final image
         output = sess.run(model['input'])

@@ -1,9 +1,8 @@
 # style-transfer
 
-A simple tensorflow implementation of style transfer as outlined in ["A Neural Algorithm of Artistic Style"](https://arxiv.org/pdf/1508.06576.pdf).  
+A tensorflow implementation of style transfer as outlined in ["A Neural Algorithm of Artistic Style"](https://arxiv.org/pdf/1508.06576.pdf).  
 
-Run `style_transfer.py`  
-`tutorial.py` is a more explicit breakdown
+View the project on Github Pages [HERE](https://k1mby.github.io/style-transfer/)
 
 ## Requirements:
 
