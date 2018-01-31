@@ -1,15 +1,15 @@
 A simple tensorflow implementation of style transfer, as outlined in ["A Neural Algorithm of Artistic Style"](https://arxiv.org/pdf/1508.06576.pdf).
 
-Read the [Introduction](/intro.html) to learn about the code. Feel free to download the source and tweak the code for your own results!
+Read the [Introduction](/intro.html) to learn about the code. See [Setup](/setup.html) for installation and usage.
 
 <p align="center">
-<img src="/img/content/sunflower.jpg" width="400px">  
+<img src="src/img/content/sunflower.jpg" width="400px">  
 </p>
 <p align="center">
-<img src="/img/style/vangogh.jpg" width="400px">  
+<img src="src/img/style/vangogh.jpg" width="400px">  
 </p>
 <p align="center">
-<img src="/img/results/vangogh/stylized_image.png" width="400px">
+<img src="src/img/results/vangogh.png" width="400px">
 </p>
 
 <br>
@@ -20,7 +20,7 @@ ___
 Tensorflow  
 Pillow  
 Scipy  
-numpy
+numpy  
 <br>
 
 ___

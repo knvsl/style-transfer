@@ -39,19 +39,20 @@ ___
 
 You will need the following requirements:
 
-Tensorflow  
+**Tensorflow  
 Pillow  
 Scipy  
-numpy
+numpy**
 
-You will also need to [download](http://www.vlfeat.org/matconvnet/pretrained/#downloading-the-pre-trained-models) the MatConvNet VGG-19 model and place it within the `style-transfer` directory.
+You will also need to [download](http://www.vlfeat.org/matconvnet/pretrained/#downloading-the-pre-trained-models) the **MatConvNet VGG-19 model** and place it within the `style-transfer` directory.
 
+> Instructions on installing Tensorflow [here](https://www.tensorflow.org/install/)  
+> Instructions on installing Conda [here](https://conda.io/docs/user-guide/install/index.html)  
+> Binaries for different Tensorflow builds by [@lakshayg on Github](https://github.com/lakshayg/tensorflow-build)
 
-Instructions on installing Tensorflow [here](https://www.tensorflow.org/install/)  
-Instructions on installing Conda [here](https://conda.io/docs/user-guide/install/index.html)  
-Binaries for different Tensorflow builds by [@lakshayg on Github](https://github.com/lakshayg/tensorflow-build)
+<br>
 
-### To run style transfer:
+### To run style transfer after installing the requirements:
 
 1. Download the source code
 
@@ -63,13 +64,26 @@ Binaries for different Tensorflow builds by [@lakshayg on Github](https://github
 
 The result will output to the `results` directory under the name `stylized_image.png`.
 
-### Notes:
+<br>
 
-I used conda and installed CPU-only tensorflow 1.4.0 with support for SSE4.1, SSE4.2, AVX, AVX2, FMA.
+___
 
-I was limited to CPU-only tensorflow and if you are as well I would highly suggest you install it with the supports mentioned above otherwise it will take a VERY long time. It still took me about 4/5 hours for 1000 iterations but you can also take advantage of cloud services.
+## Notes
 
-I also tried running this using the Deep Learning AMI (Amazon Linux) Version 3.0 on a g2.2xlarge instance. This is one of the cheaper GPU instances available and you can always terminate the instance as soon as you're done.
+**I used Conda and installed CPU-only tensorflow 1.4.0 with support for SSE4.1, SSE4.2, AVX, AVX2, FMA.**
 
-AWS DLAMI info [here](https://docs.aws.amazon.com/dlami/latest/devguide/gs.html)  
-AWS EC2 Pricing [here](https://aws.amazon.com/ec2/pricing/)
+I was limited to CPU-only tensorflow and if you are as well I would highly suggest you install it with the supports mentioned above otherwise it will take a VERY long time. It still took me about 4 hours for 1000 iterations.
+
+I also ran this using the **Deep Learning AMI (Amazon Linux) Version 3.0** on a **g2.2xlarge** instance. This is one of the cheaper GPU instances available and if you stop or terminate the instance as soon as you're done it's a few dollars.
+
+There is the cost of running the instance as well as any EBS storage you use.
+
+By default you are required to use 75GB for a g2.2xlarge instance which is the size of the snapshot. Links to pricing is below.
+
+**1000 iterations took about 20-25 minutes on a g2.2xlarge instance.**
+
+
+> AWS DLAMI info [here](https://docs.aws.amazon.com/dlami/latest/devguide/gs.html)    
+> AWS EC2 Pricing [here](https://aws.amazon.com/ec2/pricing/)  
+> AWS EBS Pricing [here](https://aws.amazon.com/ebs/pricing/)  
+> AWS Cost Calculator [here](https://calculator.s3.amazonaws.com/index.html)

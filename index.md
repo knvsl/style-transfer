@@ -3,13 +3,13 @@ A simple tensorflow implementation of style transfer, as outlined in ["A Neural 
 Read the [Introduction](/intro.html) to learn about the code. See [Setup](/setup.html) for installation and usage.
 
 <p align="center">
-<img src="/img/content/sunflower.jpg" width="400px">  
+<img src="src/img/content/sunflower.jpg" width="400px">  
 </p>
 <p align="center">
-<img src="/img/style/vangogh.jpg" width="400px">  
+<img src="src/img/style/vangogh.jpg" width="400px">  
 </p>
 <p align="center">
-<img src="/img/results/vangogh/stylized_image.png" width="400px">
+<img src="src/img/results/vangogh.png" width="400px">
 </p>
 
 <br>

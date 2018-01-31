@@ -16,7 +16,7 @@
 <!-- End Jekyll SEO tag -->
 
 
-    <link rel="stylesheet" href="/assets/css/style.css?v=b277f0485aa3decc6c4118776f3b66d547376496">
+    <link rel="stylesheet" href="/assets/css/style.css?v=df38319eaf396ae871e9d99b7fc6b2078da8bc50">
     <meta name="viewport" content="width=device-width">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -37,8 +37,8 @@
         
           <br>
           <ul class="downloads">
-            <li><a href="https://github.com/k1mby/teapot-demo/archive/master.zip">Download <strong>ZIP File</strong></a></li>
-            <li><a href="https://github.com/k1mby/teapot-demo/archive/master.tar.gz">Download <strong>TAR Ball</strong></a></li>
+            <li><a href="https://github.com/k1mby/style-transfer/archive/master.zip">Download <strong>ZIP File</strong></a></li>
+            <li><a href="https://github.com/k1mby/style-transfer/archive/master.tar.gz">Download <strong>TAR Ball</strong></a></li>
             <li><a href="http://github.com/k1mby/style-transfer">View On <strong>GitHub</strong></a></li>
           </ul>
           <br>
@@ -91,18 +91,22 @@ The output directory where the final images are saved.</p>
 
 <p>You will need the following requirements:</p>
 
-<p>Tensorflow<br />
+<p><strong>Tensorflow<br />
 Pillow<br />
 Scipy<br />
-numpy</p>
+numpy</strong></p>
 
-<p>You will also need to <a href="http://www.vlfeat.org/matconvnet/pretrained/#downloading-the-pre-trained-models">download</a> the MatConvNet VGG-19 model and place it within the <code class="highlighter-rouge">style-transfer</code> directory.</p>
+<p>You will also need to <a href="http://www.vlfeat.org/matconvnet/pretrained/#downloading-the-pre-trained-models">download</a> the <strong>MatConvNet VGG-19 model</strong> and place it within the <code class="highlighter-rouge">style-transfer</code> directory.</p>
 
-<p>Instructions on installing Tensorflow <a href="https://www.tensorflow.org/install/">here</a><br />
+<blockquote>
+  <p>Instructions on installing Tensorflow <a href="https://www.tensorflow.org/install/">here</a><br />
 Instructions on installing Conda <a href="https://conda.io/docs/user-guide/install/index.html">here</a><br />
 Binaries for different Tensorflow builds by <a href="https://github.com/lakshayg/tensorflow-build">@lakshayg on Github</a></p>
+</blockquote>
 
-<h3 id="to-run-style-transfer">To run style transfer:</h3>
+<p><br /></p>
+
+<h3 id="to-run-style-transfer-after-installing-the-requirements">To run style transfer after installing the requirements:</h3>
 
 <ol>
   <li>
@@ -121,16 +125,30 @@ Binaries for different Tensorflow builds by <a href="https://github.com/lakshayg
 
 <p>The result will output to the <code class="highlighter-rouge">results</code> directory under the name <code class="highlighter-rouge">stylized_image.png</code>.</p>
 
-<h3 id="notes">Notes:</h3>
+<p><br /></p>
 
-<p>I used conda and installed CPU-only tensorflow 1.4.0 with support for SSE4.1, SSE4.2, AVX, AVX2, FMA.</p>
+<hr />
 
-<p>I was limited to CPU-only tensorflow and if you are as well I would highly suggest you install it with the supports mentioned above otherwise it will take a VERY long time. It still took me about 4/5 hours for 1000 iterations but you can also take advantage of cloud services.</p>
+<h2 id="notes">Notes</h2>
 
-<p>I also tried running this using the Deep Learning AMI (Amazon Linux) Version 3.0 on a g2.2xlarge instance. This is one of the cheaper GPU instances available and you can always terminate the instance as soon as you’re done.</p>
+<p><strong>I used Conda and installed CPU-only tensorflow 1.4.0 with support for SSE4.1, SSE4.2, AVX, AVX2, FMA.</strong></p>
 
-<p>AWS DLAMI info <a href="https://docs.aws.amazon.com/dlami/latest/devguide/gs.html">here</a><br />
-AWS EC2 Pricing <a href="https://aws.amazon.com/ec2/pricing/">here</a></p>
+<p>I was limited to CPU-only tensorflow and if you are as well I would highly suggest you install it with the supports mentioned above otherwise it will take a VERY long time. It still took me about 4 hours for 1000 iterations.</p>
+
+<p>I also ran this using the <strong>Deep Learning AMI (Amazon Linux) Version 3.0</strong> on a <strong>g2.2xlarge</strong> instance. This is one of the cheaper GPU instances available and if you stop or terminate the instance as soon as you’re done it’s a few dollars.</p>
+
+<p>There is the cost of running the instance as well as any EBS storage you use.</p>
+
+<p>By default you are required to use 75GB for a g2.2xlarge instance which is the size of the snapshot. Links to pricing is below.</p>
+
+<p><strong>1000 iterations took about 20-25 minutes on a g2.2xlarge instance.</strong></p>
+
+<blockquote>
+  <p>AWS DLAMI info <a href="https://docs.aws.amazon.com/dlami/latest/devguide/gs.html">here</a>  <br />
+AWS EC2 Pricing <a href="https://aws.amazon.com/ec2/pricing/">here</a><br />
+AWS EBS Pricing <a href="https://aws.amazon.com/ebs/pricing/">here</a><br />
+AWS Cost Calculator <a href="https://calculator.s3.amazonaws.com/index.html">here</a></p>
+</blockquote>
 
 
       </section>
