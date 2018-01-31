@@ -7,6 +7,8 @@
 <a name="organization"></a>
 ## Code Organization
 
+## src
+
 `style_transfer.py`
 Run this to apply style transfer to an image. Contains the main code that sets up the model, evaluates the losses, and outputs the result. The content and style images are defined here as well as the iterations and alpha/beta ratio.
 
@@ -17,19 +19,17 @@ Contains all the functions that build the computation graph and compute the loss
 Helpers to load, save create white noise images.
 
 `tutorial.py`
-Commented out version with explanations and is more step-by-step for understanding.
+Version with commented explanations.
 
 ### img
-All image related directories and files.
 
-`content`
-Contains content images.
+`imagenet-vgg-verydeep-19.svg` A diagram of the VGG-19 network.
 
-`style`
-Contains style images.
+`content` Contains content images.
 
-`results`
-The output directory where the final images are saved.
+`style` Contains style images.
+
+`results` The output directory where the final images are saved.
 
 <br>
 
@@ -44,7 +44,7 @@ Pillow
 Scipy  
 numpy**
 
-You will also need to [download](http://www.vlfeat.org/matconvnet/pretrained/#downloading-the-pre-trained-models) the **MatConvNet VGG-19 model** and place it within the `style-transfer` directory.
+You will also need to [download](http://www.vlfeat.org/matconvnet/pretrained/#downloading-the-pre-trained-models) the **MatConvNet VGG-19 model** and place it inside the `src` folder.
 
 > Instructions on installing Tensorflow [here](https://www.tensorflow.org/install/)  
 > Instructions on installing Conda [here](https://conda.io/docs/user-guide/install/index.html)  
@@ -56,11 +56,11 @@ You will also need to [download](http://www.vlfeat.org/matconvnet/pretrained/#do
 
 1. Download the source code
 
-2. Download the VGG-19 file and place it within the `style-transfer` project directory
+2. Make sure the VGG-19 file is inside the `src` folder
 
 3. _OPTIONALLY_ Place your images (scaled to 800x600) within the appropriate style or content folder.
 
-4. Navigate inside the `style-transfer` project directory, activate your tensorflow environment if necessary, and run the `style_transfer.py` file.
+4. Navigate inside the `src` folder within the project directory, activate your tensorflow environment if necessary, and run the `style_transfer.py` file.
 
 The result will output to the `results` directory under the name `stylized_image.png`.
 
