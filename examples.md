@@ -7,110 +7,100 @@
 <a name="select"></a>
 ## Select Results
 
-The following images are some select results from experimenting.
+The following images are some select results from experimenting. Besides the sunflower image which is from [here](https://wallpapersontheweb.net/1401-sunflower-earth/), all of the input photos are my own.
 
-### "Woman With A Hat", Henri Matisse, 1905
+___
 
-> After 5000 iterations
+### "Mirror Lake", Franklin Carmichael, 1929
 
 <p align="center">
-<img src="src/img/style/matisse.jpg" height="400px">
+<img src="src/img/content/grass.jpg" width="300px">
+<img src="src/img/style/carmichael.jpg" width="300px">
 </p>
 
 <p align="center">
-<img src="src/img/results/matisse_best.png" width="400px">
+<img src="src/img/results/select/carmichael.png" width="300px">
+</p>
+
+___
+
+### "Landscape With A Canal", Paul C&eacute;zanne, 1879
+
+<p align="center">
+<img src="src/img/content/house.jpg" width="300px">
+<img src="src/img/style/cezanne.jpg" width="300px">
+</p>
+
+<p align="center">
+<img src="src/img/results/select/cezanne.png" width="300px">
 </p>
 
 ____
 
-## Comparison
+### "Woman With A Hat", Henri Matisse, 1905
 
-Below is a comparison of [results](#results) that all use the same following settings:
+<p align="center">
+<img src="src/img/content/sunflower.jpg" width="300px">
+<img src="src/img/style/matisse.jpg" height="300px">
+</p>
 
-* 1000 iterations, as seen below you can get strong results after only a few hundred iterations
-
-* All images resized to be 800 x 600
-
-* Using the pre-processed content image as the input image (instead of white noise)  
-
-* Computing the content loss using conv2_2 instead of conv4_2  
-
-* alpha/beta ratio = 10 000/1, putting more emphasis on style
-
-* The style layer weights decrease as the layer increases 5.0, 4.0, 3.0, 2.0, 1.0
-<br>
+<p align="center">
+<img src="src/img/results/select/matisse.png" width="300px">
+</p>
 
 ___
+
+## Comparison
+
+Below is a comparison of results that all use the default settings in the source code.
+
 
 ### Notes
 
-In the original paper the input image was a white noise image and the alpha/beta ration was between 10e<sup>-4</sup> and 10e<sup>-3</sup>. I found I saw better results by using the content image as the base and having a large alpha value to then place more emphasis on the style.  
+The content image was used as a base instead of a white noise image. The alpha/beta ratio was then inverted, placing more emphasis on style.
 
-I also used conv2_2 to compute the content loss instead of conv4_2. As outlined [here](https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Gatys_Image_Style_Transfer_CVPR_2016_paper.pdf), using conv2_2 instead of conv4_2 results in preserving more of the finer structure of the original image.
+For content loss conv2_2 can be used instead of or along with conv4_2. As outlined [here](https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Gatys_Image_Style_Transfer_CVPR_2016_paper.pdf), using conv2_2 can result in preserving more of the finer details of the original image.
 
-The other main difference is that in the original paper the style layer weights are all set to 1.0 divided by the total number of layers used in computing style loss.
-
-The features of higher layers get increasingly complex and abstract, so I tried out both increasing and decreasing the style weights as the layers increase to see what happens. Decreasing
+Features of higher layers get increasingly complex and abstract, instead of the default 0.2 weight for each style layer, the weights were set higher on lower layers to emphasize basic structures, and decreased for higher layers.
 
 This gave me a noticeable improvement for styles defined by "coarse" textures such as Van Gogh's aggressive brush strokes or Picasso's cubist paintings.
 
-<br>
+Best results are easiest to obtain when using style and content images whose general structure is similar.
 
 ___
-<a name="results"></a>
-### Results
 
-#### Common content image from [this](https://wallpapersontheweb.net/1401-sunflower-earth/) wallpaper site
-
-Before pre-processing:
+#### Common content image from [here](https://wallpapersontheweb.net/1401-sunflower-earth/)
 
 <p align="center">
-<img src="src/img/content/sunflower.jpg" width="400px">
-</p>
-
-After pre-processing:
-
-<p align="center">
-<img src="src/img/results/iteration_0.png" width="400px">
+<img src="src/img/content/sunflower.jpg" width="300px">
 </p>
 ___
 #### "The Starry Night", Vincent Van Gogh, 1889
 
 <p align="center">
-<img src="src/img/style/vangogh.jpg" width="400px">
+<img src="src/img/style/vangogh.jpg" width="300px">
+<img src="src/img/results/default/vangogh.png" width="300px">
 </p>
 
-<p align="center">
-<img src="src/img/results/vangogh.png" width="400px">
-</p>
-___
-### "Woman With A Hat", Henri Matisse, 1905
-
-<p align="center">
-<img src="src/img/style/matisse.jpg" height="400px">
-</p>
-
-<p align="center">
-<img src="src/img/results/matisse.png" width="400px">
-</p>
 ___
 ### "Houses On The Hill", Pablo Picasso, 1902
 
 <p align="center">
-<img src="src/img/style/picasso.jpg" width="400px">
+<img src="src/img/style/picasso.jpg" width="300px">
+<img src="src/img/results/default/picasso.png" width="300px">
 </p>
 
+___
+### "Woman With A Hat", Henri Matisse, 1905
+
 <p align="center">
-<img src="src/img/results/picasso.png" width="400px">
+<img src="src/img/style/matisse.jpg" height="300px">
+<img src="src/img/results/default/matisse.png" width="300px">
 </p>
 ___
 ### "Riders On The Beach", Paul Gauguin, 1902
 
 <p align="center">
-<img src="src/img/style/gauguin.jpg" width="400px">
+<img src="src/img/style/gauguin.jpg" width="300px">
+<img src="src/img/results/default/gauguin.png" width="300px">
 </p>
-
-<p align="center">
-<img src="src/img/results/gauguin.png" width="400px">
-</p>
-<br>
