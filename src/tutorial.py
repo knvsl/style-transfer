@@ -213,13 +213,19 @@ if __name__ == '__main__':
         # Total loss
         L_total = BETA * L_content + ALPHA * L_style
 
-        # Minimize loss
+        # Using Adam Optimizer
         optimizer = tf.train.AdamOptimizer(LEARNING_RATE)
         train_step = optimizer.minimize(L_total)
 
+        # Input the base image
         sess.run(tf.global_variables_initializer())
         sess.run(model['input'].assign(input))
 
+        # Create output folder
+        if not os.path.exists('img/results'):
+            os.mkdir('img/results')
+
+        # Run gradient descent
         for i in range(ITERATIONS):
             sess.run(train_step)
 

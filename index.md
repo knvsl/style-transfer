@@ -1,6 +1,6 @@
 A simple tensorflow implementation of style transfer, as outlined in ["A Neural Algorithm of Artistic Style"](https://arxiv.org/pdf/1508.06576.pdf).
 
-Read the [Introduction](/intro.html) to learn about the code. See [Setup](/setup.html) for installation and usage.
+Read the [Introduction](intro.html) to learn about the code. See [Setup](setup.html) for installation and usage.
 
 <p align="center">
 <img src="src/img/content/sunflower.jpg" width="400px">  
