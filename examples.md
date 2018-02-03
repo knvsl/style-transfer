@@ -50,6 +50,20 @@ ____
 
 ___
 
+### "Lake Wabagishik, Franklin Carmichael, 1928
+
+<p align="center">
+<img src="src/img/content/cairn.jpg" width="300px">
+<img src="src/img/style/carmichael2.jpg" width="300px">
+</p>
+
+<p align="center">
+<img src="src/img/results/select/carmichael2.png" width="300px">
+</p>
+
+___
+
+
 ## Comparison
 
 Below is a comparison of results that all use the default settings in the source code.
