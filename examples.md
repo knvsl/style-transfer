@@ -63,6 +63,19 @@ ___
 
 ___
 
+### "In The Northland", Tom Thomson, 1915
+
+<p align="center">
+<img src="src/img/content/trees.jpg" width="300px">
+<img src="src/img/style/thomson.jpg" width="300px">
+</p>
+
+<p align="center">
+<img src="src/img/results/select/thomson.png" width="300px">
+</p>
+
+___
+
 
 ## Comparison
 

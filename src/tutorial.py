@@ -69,7 +69,7 @@ def content_loss(sess, model):
         M = F.shape[1] * F.shape[2]
         # The paper outlines the loss as:
         # (1 / 2) * tf.reduce_sum(tf.pow(F - P, 2))
-        # However it seems most people get better results computing the loss as below
+        # However it seems most people compute the loss as below, with better results
         loss += (1 / (4 * N * M)) * tf.reduce_sum(tf.pow(F - P, 2))
 
     return loss
@@ -93,9 +93,7 @@ def style_loss(sess, model):
             A = gram(P, N, M)
             # Gram matrix of generated image
             G = gram(F, N, M)
-
-            #W = 0.2
-
+            # E is the style loss for a single layer multiplied by the weight of that layer
             E = (1 / (4 * N**2 * M**2)) * tf.reduce_sum(tf.pow(G - A, 2)) * w
             loss += E
 
@@ -129,12 +127,14 @@ def create_model():
     model = {}
     model['input']   = tf.Variable(np.zeros((1, HEIGHT, WIDTH, 3)), dtype = 'float32')
 
+    # Convolution and then apply relu
     model['conv1_1']  = conv(model['input'], 0)
     model['relu1_1'] = relu(model['conv1_1'])
 
     model['conv1_2']  = conv(model['relu1_1'], 2)
     model['relu1_2'] = relu(model['conv1_2'])
 
+    # We're gonna use average pooling instead of max pooling as paper suggests
     model['avgpool1'] = avgpool(model['relu1_2'])
 
     model['conv2_1']  = conv(model['avgpool1'], 5)
@@ -186,6 +186,8 @@ def create_model():
     model['relu5_4'] = relu(model['conv5_4'])
 
     model['avgpool5'] = avgpool(model['relu5_4'])
+    # We don't use any of the fully connected layers
+
     return model
 
 
@@ -195,9 +197,11 @@ if __name__ == '__main__':
         # Load images
         content = load_img(CONTENT)
         style = load_img(STYLE)
+
+        # The input will be a noisy version of our content, or could be full noise/content
         input = noisy_img(content)
 
-        # Create computation model and initialize variables
+        # Create computation graph
         model = create_model()
 
         # Content loss
@@ -211,6 +215,7 @@ if __name__ == '__main__':
         L_style = style_loss(sess, model)
 
         # Total loss
+        # ALPHA is style weight, BETA is content weight
         L_total = BETA * L_content + ALPHA * L_style
 
         # Using Adam Optimizer
@@ -229,14 +234,14 @@ if __name__ == '__main__':
         for i in range(ITERATIONS):
             sess.run(train_step)
 
-            # Output progress
+            # Output progress images
             if i%100 == 0:
                 output = sess.run(model['input'])
                 print('Iteration: %d' % i)
                 filename = 'img/results/iteration_%d.png' % (i)
                 save_img(filename, output)
 
-        # Output final image and notify we're done
+        # Output the final image and notify we're done
         output = sess.run(model['input'])
         filename = 'img/results/final_image_iteration_%d.png' % (ITERATIONS)
         save_img(filename, output)

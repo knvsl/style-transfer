@@ -19,7 +19,6 @@ Contains all the functions that build the computation graph and compute the loss
 Helpers to load, save create white noise images.
 
 `tutorial.py`
-Version with commented explanations.
 
 ### img
 
@@ -80,7 +79,7 @@ There is the cost of running the instance as well as any EBS storage you use.
 
 By default you are required to use 75GB for a g2.2xlarge instance which is the size of the snapshot. Links to pricing is below.
 
-**1000 iterations took about 20-25 minutes on a g2.2xlarge instance.**
+**1000 iterations took about 20 minutes on a g2.2xlarge instance.**
 
 
 > AWS DLAMI info [here](https://docs.aws.amazon.com/dlami/latest/devguide/gs.html)    
