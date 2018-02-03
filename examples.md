@@ -76,6 +76,20 @@ ___
 
 ___
 
+### "The Starry Night", Vincent Van Gogh, 1889
+
+<p align="center">
+<img src="src/img/content/cairn.jpg" width="300px">
+<img src="src/img/style/vangogh.jpg" width="300px">
+</p>
+
+<p align="center">
+<img src="src/img/results/select/vangogh.png" width="300px">
+</p>
+
+___
+
+
 
 ## Comparison
 
@@ -123,11 +137,4 @@ ___
 <p align="center">
 <img src="src/img/style/matisse.jpg" height="300px">
 <img src="src/img/results/default/matisse.png" width="300px">
-</p>
-___
-### "Riders On The Beach", Paul Gauguin, 1902
-
-<p align="center">
-<img src="src/img/style/gauguin.jpg" width="300px">
-<img src="src/img/results/default/gauguin.png" width="300px">
 </p>
