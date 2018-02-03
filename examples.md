@@ -86,13 +86,13 @@ Below is a comparison of results that all use the default settings in the source
 
 The content image was used as a base instead of a white noise image. The alpha/beta ratio was then inverted, placing more emphasis on style.
 
-For content loss conv2_2 can be used instead of or along with conv4_2. As outlined [here](https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Gatys_Image_Style_Transfer_CVPR_2016_paper.pdf), using conv2_2 can result in preserving more of the finer details of the original image.
+For content loss conv2_2 was used instead/along with conv4_2. As outlined [here](https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Gatys_Image_Style_Transfer_CVPR_2016_paper.pdf), using conv2_2 can result in preserving more of the finer details of the original image.
 
 Features of higher layers get increasingly complex and abstract, instead of the default 0.2 weight for each style layer, the weights were set higher on lower layers to emphasize basic structures, and decreased for higher layers.
 
 This gave me a noticeable improvement for styles defined by "coarse" textures such as Van Gogh's aggressive brush strokes or Picasso's cubist paintings.
 
-Best results are easiest to obtain when using style and content images whose general structure is similar.
+Best results were easiest to obtain when using style and content images whose general structure is similar.
 
 ___
 
