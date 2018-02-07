@@ -1,6 +1,6 @@
 **Sections:**  
 [Select Results](#select)  
-[Comparison](#results)  
+[Comparison](#comparison)  
 [Back to main](./)
 <br>
 
@@ -90,7 +90,7 @@ ___
 ___
 
 
-
+<a name="comparison"></a>
 ## Comparison
 
 Below is a comparison of results that all use the default settings in the source code.

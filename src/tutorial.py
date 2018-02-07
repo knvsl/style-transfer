@@ -28,9 +28,8 @@ HEIGHT = 600
 RGB_MEANS = np.array([123.68, 116.779, 103.939]).reshape((1,1,1,3))
 
 def noisy_img(content):
-    noise = np.random.uniform(-255, 255, content.shape).astype('float32')
-    # Mix content image with some noise
-    image = noise * 0.3 + content * 0.7
+    # White noise
+    image = np.random.uniform(-255, 255, content.shape).astype('float32')
     return image
 
 def load_img(path):
@@ -84,7 +83,6 @@ def style_loss(sess, model):
             # P is original image
             F = sess.run(model[layer])
             P = model[layer]
-
             # Number of filters
             N = F.shape[3]
             # Height x Width of feature map
@@ -123,8 +121,8 @@ def avgpool(input):
 
 def create_model():
 
-    # Explicit step-by-step graph construction
     model = {}
+    # Initial input is the image
     model['input']   = tf.Variable(np.zeros((1, HEIGHT, WIDTH, 3)), dtype = 'float32')
 
     # Convolution and then apply relu
@@ -198,7 +196,7 @@ if __name__ == '__main__':
         content = load_img(CONTENT)
         style = load_img(STYLE)
 
-        # The input will be a noisy version of our content, or could be full noise/content
+        # The input will be a white noise image
         input = noisy_img(content)
 
         # Create computation graph
@@ -226,20 +224,13 @@ if __name__ == '__main__':
         sess.run(tf.global_variables_initializer())
         sess.run(model['input'].assign(input))
 
-        # Create output folder
-        if not os.path.exists('img/results'):
-            os.mkdir('img/results')
-
         # Run gradient descent
         for i in range(ITERATIONS):
             sess.run(train_step)
 
-            # Output progress images
-            if i%100 == 0:
-                output = sess.run(model['input'])
-                print('Iteration: %d' % i)
-                filename = 'img/results/iteration_%d.png' % (i)
-                save_img(filename, output)
+        # Create output folder
+        if not os.path.exists('img/results'):
+            os.mkdir('img/results')
 
         # Output the final image and notify we're done
         output = sess.run(model['input'])

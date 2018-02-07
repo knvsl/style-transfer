@@ -18,8 +18,6 @@ Contains all the functions that build the computation graph and compute the loss
 `image.py`
 Helpers to load, save create white noise images.
 
-`tutorial.py`
-
 ### img
 
 `imagenet-vgg-verydeep-19.svg` A diagram of the VGG-19 network.
