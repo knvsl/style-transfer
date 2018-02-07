@@ -64,7 +64,6 @@ def create_model():
         'avgpool5'
     ]
 
-    # Initial input is the image
     input = tf.Variable(np.zeros((1, HEIGHT, WIDTH, 3)), dtype = 'float32')
     model['input'] = input
 
@@ -84,7 +83,6 @@ def create_model():
     return model
 
 def gram(input, n, m):
-    # Reshape to 2D matrix
     matrix = tf.reshape(input, (m, n))
     return tf.matmul(tf.transpose(matrix), matrix)
 

@@ -28,7 +28,6 @@ if __name__ == '__main__':
         # Using content as base instead of white noise
         input = content
 
-        # Create computation graph
         model = create_model()
 
         # Content loss
@@ -43,24 +42,20 @@ if __name__ == '__main__':
 
         # Total loss
         L_total = BETA * L_content + ALPHA * L_style
-
-        # Using Adam optimizer
+        
         optimizer = tf.train.AdamOptimizer(LEARNING_RATE)
         train_step = optimizer.minimize(L_total)
 
-        # Input our base image
         sess.run(tf.global_variables_initializer())
         sess.run(model['input'].assign(input))
 
-        # Run gradient descent
         for _ in range(ITERATIONS):
             sess.run(train_step)
 
-        # Create results directory
+        # Output the final image
         if not os.path.exists('img/results'):
             os.mkdir('img/results')
-
-        # Save final image
+            
         output = sess.run(model['input'])
         filename = 'img/results/stylized_image.png'
         save_img(filename, output)
