@@ -1,6 +1,14 @@
 # style-transfer
 
-A tensorflow implementation of style transfer as outlined in ["A Neural Algorithm of Artistic Style"](https://arxiv.org/pdf/1508.06576.pdf).  
+A tensorflow implementation of style transfer as outlined in ["A Neural Algorithm of Artistic Style"](https://arxiv.org/pdf/1508.06576.pdf). 
+
+Built as an exploration of tensorflow following a variety of useful resources online:  
+
+[https://www.tensorflow.org/api_docs/](https://www.tensorflow.org/api_docs/)  
+[https://www.anishathalye.com/2015/12/19/an-ai-that-can-mimic-any-artist/](https://www.anishathalye.com/2015/12/19/an-ai-that-can-mimic-any-artist/)  
+[https://medium.com/mlreview/making-ai-art-with-style-transfer-using-keras-8bb5fa44b216](https://medium.com/mlreview/making-ai-art-with-style-transfer-using-keras-8bb5fa44b216)
+
+
 
 View the project on Github Pages [HERE](https://k1mby.github.io/style-transfer/)
 
