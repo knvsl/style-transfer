@@ -10,7 +10,7 @@ Built as an exploration of tensorflow following a variety of useful resources on
 
 
 
-View the project on Github Pages [HERE](https://k1mby.github.io/style-transfer/)
+View the project on Github Pages [HERE](https://knvsl.github.io/style-transfer/)
 
 ## Requirements:
 
